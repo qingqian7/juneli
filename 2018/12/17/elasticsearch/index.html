@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>elasticsearch | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ElasticSearch 基础介绍和索引原理分析Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:  分布式实时文件存储，并将每一个字段都默认编入索引，使其便于被搜索 实时分析的分布式搜">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elasticsearch">
+<meta property="og:url" content="http://yoursite.com/2018/12/17/elasticsearch/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ElasticSearch 基础介绍和索引原理分析Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:  分布式实时文件存储，并将每一个字段都默认编入索引，使其便于被搜索 实时分析的分布式搜">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/1.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/2.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/4.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/5.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/6.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/7.png?raw=true">
+<meta property="og:updated_time" content="2019-07-18T13:02:55.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elasticsearch">
+<meta name="twitter:description" content="ElasticSearch 基础介绍和索引原理分析Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:  分布式实时文件存储，并将每一个字段都默认编入索引，使其便于被搜索 实时分析的分布式搜">
+<meta name="twitter:image" content="https://github.com/qingqian7/images/blob/master/elasticsearch/1.png?raw=true">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/elasticsearch/" class="article-date">
+  <time datetime="2018-12-17T07:58:01.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      elasticsearch
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="ElasticSearch-基础介绍和索引原理分析"><a href="#ElasticSearch-基础介绍和索引原理分析" class="headerlink" title="ElasticSearch 基础介绍和索引原理分析"></a>ElasticSearch 基础介绍和索引原理分析</h2><p>Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:</p>
+<ul>
+<li>分布式实时文件存储，并将每一个字段都默认编入索引，使其便于被搜索</li>
+<li>实时分析的分布式搜索引擎</li>
+<li>可扩展到上百台服务器，处理pb级别的结构化和非结构化数据<a id="more"></a>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3>es是文件存储，是面向文档型的数据库，类似于MongoDb,一条数据在这里就是一个文档，用json作为文档序列化的格式。比如下面的用户数据：<br>{<br>  “name” :     “John”,<br>  “sex” :      “Male”,<br>  “age” :      25,<br>  “birthDate”: “1990/05/01”,<br>  “about” :    “I love to go rock climbing”,<br>  “interests”: [ “sports”, “music” ]<br>}<br>用MySQL这样的数据库存储就是建立一张user表，在es这里就是一个文档，当然这个文档是属于user类型的，各种各样的类型会存在于一个索引当中。关系型数据库和es对照关系<br>关系数据库     ⇒ 数据库 ⇒ 表    ⇒ 行    ⇒ 列(Columns)</li>
+</ul>
+<p>Elasticsearch  ⇒ 索引(Index)   ⇒ 类型(type)  ⇒ 文档(Docments)  ⇒ 字段(Fields)  </p>
+<h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><p>Es最关键的就是提供了强大的索引能力。<a href="http://www.infoq.com/cn/articles/database-timestamp-02?utm_source=infoq&utm_medium=related_content_link&utm_campaign=relatedContent_articles_clk" target="_blank" rel="noopener">时间序列数据库的秘密</a>写的很好，是关于索引的<br>Es的关键是通过牺牲其他的，比如插入，删除等的性能来提高查询的效率。es插入一个对象就是直接put一个json对象，这个对象的各个field，es默认为其建立索引（所以如果不需要索引的应该声明，不然影响存储性能）</p>
+<h3 id="Elasticsearch是如何做到快速索引的"><a href="#Elasticsearch是如何做到快速索引的" class="headerlink" title="Elasticsearch是如何做到快速索引的"></a>Elasticsearch是如何做到快速索引的</h3><p>关系型数据库中存储数据是利用B-Tree /B+Tree来做的，对于插入删除查找，性能都不错，效率是logN，而es里是采用倒排索引来建立索引的存储<br>继续上面的例子，假设有这么几条数据(为了简单，去掉about, interests这两个field):</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th align="center">Name</th>
+<th align="right">Age</th>
+<th align="right">Sex</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td align="center">Kate</td>
+<td align="right">24</td>
+<td align="right">Female</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="center">John</td>
+<td align="right">24</td>
+<td align="right">Male</td>
+</tr>
+<tr>
+<td>3</td>
+<td align="center">Bill</td>
+<td align="right">29</td>
+<td align="right">Male</td>
+</tr>
+<tr>
+<td>ID是Elasticsearch自建的文档id，那么Elasticsearch建立的索引如下:</td>
+<td align="center"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+<tr>
+<td>Name:</td>
+<td align="center"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th align="center">Posting List</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kate</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td>John</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td>Bill</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Age:</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th align="center">Posting List</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>24</td>
+<td align="center">[1,2]</td>
+</tr>
+<tr>
+<td>29</td>
+<td align="center">3</td>
+</tr>
+<tr>
+<td>Sex:</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th align="center">Posting List</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Female</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td>Male</td>
+<td align="center">[2,3]</td>
+</tr>
+<tr>
+<td>Posting List</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Elasticsearch分别为每个field都建立了一个倒排索引，Kate, John, 24, Female这些叫term，而[1,2]就是Posting List。Posting list就是一个int的数组，存储了所有符合某个term的文档id。</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>看到这里，不要认为就结束了，精彩的部分才刚开始…</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>通过posting list这种索引方式似乎可以很快进行查找，比如要找age=24的同学，爱回答问题的小明马上就举手回答：我知道，id是1，2的同学。但是，如果这里有上千万的记录呢？如果是想通过name来查找呢？</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Term Dictionary</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Elasticsearch为了能快速找到某个term，将所有的term排个序，二分法查找term，logN的查找效率，就像通过字典查找一样，这就是Term Dictionary。现在再看起来，似乎和传统数据库通过B-Tree的方式类似啊，为什么说比B-Tree的查询快呢？</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>Term Index</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>B-Tree通过减少磁盘寻道次数来提高查询性能，Elasticsearch也是采用同样的思路，直接通过内存查找term，不读磁盘，但是如果term太多，term dictionary也会很大，放内存不现实，于是有了Term Index，就像字典里的索引页一样，A开头的有哪些term，分别在哪页，可以理解term index是一颗树：</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/1.png?raw=true" alt="image1"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td>这棵树不会包含所有的term，它包含的是term的一些前缀。通过term index可以快速地定位到term dictionary的某个offset，然后从这个位置再往后顺序查找。</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/2.png?raw=true" alt="image2"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<p>所以term index不需要存下所有的term，而仅仅是他们的一些前缀与Term Dictionary的block之间的映射关系，再结合FST(Finite State Transducers)的压缩技术，可以使term index缓存到内存中。从term index查到对应的term dictionary的block位置之后，再去磁盘上找term，大大减少了磁盘随机读的次数。</p>
+<h3 id="压缩技巧"><a href="#压缩技巧" class="headerlink" title="压缩技巧"></a>压缩技巧</h3><p>Elasticsearch里除了上面说到用FST压缩term index外，对posting list也有压缩技巧。<br>嗯，我们再看回最开始的例子，如果Elasticsearch需要对同学的性别进行索引(这时传统关系型数据库已经哭晕在厕所……)，会怎样？如果有上千万个同学，而世界上只有男/女这样两个性别，每个posting list都会有至少百万个文档id。 Elasticsearch是如何有效的对这些文档id压缩的呢？</p>
+<h4 id="Frame-Of-Reference"><a href="#Frame-Of-Reference" class="headerlink" title="Frame Of Reference"></a>Frame Of Reference</h4><p>增量编码压缩，将大数变小数，按字节存储<br>首先，Elasticsearch要求posting list是有序的(为了提高搜索的性能，再任性的要求也得满足)，这样做的一个好处是方便压缩，看下面这个图例：<br><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/4.png?raw=true" alt="image4"><br>原理就是通过增量，将原来的大数变成小数仅存储增量值，再精打细算按bit排好队，最后通过字节存储，而不是大大咧咧的尽管是2也是用int(4个字节)来存储。</p>
+<h4 id="Roaring-bitmaps"><a href="#Roaring-bitmaps" class="headerlink" title="Roaring bitmaps"></a>Roaring bitmaps</h4><p>说到Roaring bitmaps，就必须先从bitmap说起。Bitmap是一种数据结构，假设有某个posting list：<br>[1,3,4,7,10]<br>对应的bitmap就是：<br>[1,0,1,1,0,0,1,0,0,1]<br>非常直观，用0/1表示某个值是否存在，比如10这个值就对应第10位，对应的bit值是1，这样用一个字节就可以代表8个文档id，旧版本(5.0之前)的Lucene就是用这样的方式来压缩的，但这样的压缩方式仍然不够高效，如果有1亿个文档，那么需要12.5MB的存储空间，这仅仅是对应一个索引字段(我们往往会有很多个索引字段)。于是有人想出了Roaring bitmaps这样更高效的数据结构。<br>Bitmap的缺点是存储空间随着文档个数线性增长，Roaring bitmaps需要打破这个魔咒就一定要用到某些指数特性：<br>将posting list按照65535为界限分块，比如第一块所包含的文档id范围在0<del>65535之间，第二块的id范围是65536</del>131071，以此类推。再用&lt;商，余数&gt;的组合表示每一组id，这样每组里的id范围都在0~65535内了，剩下的就好办了，既然每组id不会变得无限大，那么我们就可以通过最有效的方式对这里的id存储。<br><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/5.png?raw=true" alt="image5"></p>
+<h4 id="联合索引"><a href="#联合索引" class="headerlink" title="联合索引"></a>联合索引</h4><p>上面说了半天都是单field索引，如果多个field索引的联合查询，倒排索引如何满足快速查询的要求呢？<br>利用跳表(Skip list)的数据结构快速做“与”运算，或者<br>利用上面提到的bitset按位“与” （按位与很常见，关系型数据库中常用这种）<br>先看看跳表的数据结构：<br><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/6.png?raw=true" alt="image6"><br>将一个有序链表level0，挑出其中几个元素到level1及level2，每个level越往上，选出来的指针元素越少，查找时依次从高level往低查找，比如55，先找到level2的31，再找到level1的47，最后找到55，一共3次查找，查找效率和2叉树的效率相当，但也是用了一定的空间冗余来换取的。</p>
+<p>假设有下面三个posting list需要联合索引：<br><img src="https://github.com/qingqian7/images/blob/master/elasticsearch/7.png?raw=true" alt="image7"><br>如果使用跳表，对最短的posting list中的每个id，逐个在另外两个posting list中查找看是否存在，最后得到交集的结果。<br>如果使用bitset，就很直观了，直接按位与，得到的结果就是最后的交集。</p>
+<p>### </p>
+<h3 id="总结和思考"><a href="#总结和思考" class="headerlink" title="总结和思考"></a>总结和思考</h3><p>Elasticsearch的索引思路:<br>将磁盘里的东西尽量搬进内存，减少磁盘随机读取次数(同时也利用磁盘顺序读特性)，结合各种奇技淫巧的压缩算法，用及其苛刻的态度使用内存。<br>所以，对于使用Elasticsearch进行索引时需要注意:</p>
+<ul>
+<li>不需要索引的字段，一定要明确定义出来，因为默认是自动建索引的</li>
+<li>同样的道理，对于String类型的字段，不需要analysis的也需要明确定义出来，因为默认也是会analysis的</li>
+<li>选择有规律的ID很重要，随机性太大的ID(比如java的UUID)不利于查询<br>其中一个(也许不是最重要的)因素: 上面看到的压缩算法，都是对Posting list里的大量ID进行压缩的，那如果ID是顺序的，或者是有公共前缀等具有一定规律性的ID，压缩比会比较高；<br>另外一个因素: 可能是最影响查询性能的，应该是最后通过Posting list里的ID到磁盘中查找Document信息的那步，因为Elasticsearch是分Segment存储的，根据ID这个大范围的Term定位到Segment的效率直接影响了最后查询的性能，如果ID是有规律的，可以快速跳过不包含该ID的Segment，从而减少不必要的磁盘读次数，具体可以参考这篇如何选择一个高效的全局ID方案(评论也很精彩)</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/elasticsearch/" data-id="cjy8or7ij000eiwnwmucumdfe" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/17/springboot-elasticsearch/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          springboot_elasticsearch
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/10/gateway/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">gateway</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

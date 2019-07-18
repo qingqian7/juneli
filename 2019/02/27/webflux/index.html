@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>webflux | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="spring webflux 功能与api背景Netty作为java领域首屈一指的nio框架，其以优越的性能被众多中间件所使用。但到了java的web开发领域，却很难享受到Netty的性能优势。其原因在于传统web开发基于servlet容器，许多依赖和开发框架都是基于servlet实现的，比如spring。而netty为了保持代码的简单和高效，并没有实现servlet标准，这就导致将web容器迁移">
+<meta property="og:type" content="article">
+<meta property="og:title" content="webflux">
+<meta property="og:url" content="http://yoursite.com/2019/02/27/webflux/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="spring webflux 功能与api背景Netty作为java领域首屈一指的nio框架，其以优越的性能被众多中间件所使用。但到了java的web开发领域，却很难享受到Netty的性能优势。其原因在于传统web开发基于servlet容器，许多依赖和开发框架都是基于servlet实现的，比如spring。而netty为了保持代码的简单和高效，并没有实现servlet标准，这就导致将web容器迁移">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:47.813Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="webflux">
+<meta name="twitter:description" content="spring webflux 功能与api背景Netty作为java领域首屈一指的nio框架，其以优越的性能被众多中间件所使用。但到了java的web开发领域，却很难享受到Netty的性能优势。其原因在于传统web开发基于servlet容器，许多依赖和开发框架都是基于servlet实现的，比如spring。而netty为了保持代码的简单和高效，并没有实现servlet标准，这就导致将web容器迁移">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-webflux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/27/webflux/" class="article-date">
+  <time datetime="2019-02-27T13:22:19.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      webflux
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>spring webflux</p>
+<h3 id="功能与api"><a href="#功能与api" class="headerlink" title="功能与api"></a>功能与api</h3><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>Netty作为java领域首屈一指的nio框架，其以优越的性能被众多中间件所使用。但到了java的web开发领域，却很难享受到Netty的性能优势。其原因在于传统web开发基于servlet容器，许多依赖和开发框架都是基于servlet实现的，比如spring。而netty为了保持代码的简单和高效，并没有实现servlet标准，这就导致将web容器迁移到netty后许多框架和第三方库不能使用，迁移的成本过大。但spring webflux出现改变了这一现状。她在兼容原有mvc开发方式的同时，重写和实现了大量第三方库，在提升性能的同时，降低了迁移的成本。同时spring webflux适配多种web容器，即使仍然使用tomcat也是可以的。</p>
+<a id="more"></a>
+<h4 id="接口声明"><a href="#接口声明" class="headerlink" title="接口声明"></a>接口声明</h4><p>接口声明除了保留原有注解式声明的方式，为了满足reactor的编程风格，额外支持了函数式声明的方式。通工具类RouterFunctions过构造RounterFunction对象，并向Spring注入实现函数式接口声明。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public TestHandler testHandler() &#123;</span><br><span class="line">    return new TestHandler();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Bean</span><br><span class="line">public RouterFunction&lt;ServerResponse&gt; routes(TestHandler testHandler) &#123;</span><br><span class="line">    return RouterFunctions.route(RequestPredicates.POST(&quot;/route&quot;),</span><br><span class="line">        testHandler::echoName);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@GetMapping(&quot;anno&quot;)</span><br><span class="line">public String sayHello(String name) &#123;</span><br><span class="line">    return &quot;hello world! &quot; + name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class TestHandler &#123;</span><br><span class="line">    public Mono&lt;ServerResponse&gt; echoName(ServerRequest request) &#123;</span><br><span class="line">        return request.bodyToMono(Post.class)</span><br><span class="line">          .map(Post::getName)</span><br><span class="line">          .flatMap(name -&gt; ServerResponse.ok()</span><br><span class="line">            .contentType(MediaType.TEXT_PLAIN)</span><br><span class="line">            .body(BodyInserters.fromObject(&quot;hello world!&quot; + name)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在WebFlux中，request和respose不再是原来的ServletRequest和ServletRequest，取而代之的是ServerRequest和ServerResponse。这两个对象是webflux新出现的。首先webflux底层如果使用了reactor-netty，那么自然就没有所谓的servlet一说，另外ServerRequest和ServerResponse提供了对non-blocking和backpressure特性的支持，提供了将Http消息内容转换成Mono和Flux的方法，使响应式编程成为了可能。</p>
+<h4 id="过滤器Filter"><a href="#过滤器Filter" class="headerlink" title="过滤器Filter"></a>过滤器Filter</h4><p>过滤器的使用方法和spring mvc类似，不过与ServerRequest和ServerResponse相同的是，webflux提供了一个新的过滤器接口WebFilter以提供对Mono和Flux的支持。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class DemoWebFilter implements WebFilter&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Mono&lt;Void&gt; filter(ServerWebExchange serverWebExchange, WebFilterChain webFilterChain) &#123;</span><br><span class="line">        if (!serverWebExchange.getRequest().getHeaders().containsKey(&quot;token&quot;)) &#123;</span><br><span class="line">            serverWebExchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);</span><br><span class="line">            return Mono.empty();</span><br><span class="line">        &#125;</span><br><span class="line">        return webFilterChain.filter(serverWebExchange);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是Mono<void>这个返回值，在框架的很多地方都会用到。他意味着一个空的Mono，对于任何读取，他会立刻发出一个complete信号。相比与直接返回void，Mono<void>作为方法的返回值时，可以对该方法进行链式调用。另外虽然Mono<void>虽然没有返回值，但是其本身的complete或者error状态，也可以注册回调进行异步处理。</void></void></void></p>
+<h4 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h4><p>在Spring Webflux中，异常分两种。一是controller中方法抛出的异常，这在webflux中同样可以像在mvc中用@ExceptionHandler声明异常处理方法。二是在WebHandler API这种比较偏底层的api，典型的是WebFilter，异常处理使用了支持Mono的新接口：WebExceptionHandler，可用于处理来自WebFilter链和WebHandler的异常。使用WebExceptionHandler时，只要将其声明为Spring bean即可自动注入并使用，并可选择通过bean声明上的@Order或通过实现Ordered来表示优先级。需要注意的是webflux有默认的WebExceptionHandler-DefaultErrorWebExceptionHandler，其order为默认的-1。如果我们想自定义WebExceptionHandler，那么必须将order声明为-2以上，否则异常将不会传递到我们自定义的WebExceptionHandler中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">//要比DefaultErrorWebExceptionHandler优先级-1高</span><br><span class="line">//比较底层，如果异常被@ExceptionHandler处理了，那么将不会由此处理</span><br><span class="line">//可以处理filter和webHandler中的异常</span><br><span class="line">@Order(-2)</span><br><span class="line">public class ErrorLogHandler implements WebExceptionHandler &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public Mono&lt;Void&gt; handle(ServerWebExchange exchange, Throwable ex) &#123;</span><br><span class="line">        exchange.getResponse().setStatusCode(HttpStatus.OK);</span><br><span class="line">        byte[] bytes = (&quot;ErrorLogHandler: &quot; + ex.getMessage()).getBytes(StandardCharsets.UTF_8);</span><br><span class="line">        DataBuffer wrap = exchange.getResponse().bufferFactory().wrap(bytes);</span><br><span class="line">        return exchange.getResponse().writeWith(Flux.just(wrap));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">@ExceptionHandler(Exception.class)</span><br><span class="line">    public String test(Exception e) &#123;</span><br><span class="line">        return &quot;@ExceptionHandler: &quot; + e.getMessage();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Multipart和Stream"><a href="#Multipart和Stream" class="headerlink" title="Multipart和Stream"></a>Multipart和Stream</h4><p>在基础框架reactor中Mono代表一个单次发送的数据源，而Flux代表一个可多次发送的数据源。在spring webflux的controller中，Mono很好理解，代表前端的一次传参或接口的一次返回。那么Flux该如何使用呢？简单来说Flux在这两个场景下使用：接受Multipart参数、返回Stream类型数据或者用于分批返回。代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@PostMapping(value = &quot;&quot;, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)</span><br><span class="line">    Mono&lt;String&gt; requestBodyFlux(@RequestBody Flux&lt;Part&gt; parts) &#123;</span><br><span class="line">        return parts.map(part -&gt; part instanceof FilePart</span><br><span class="line">              ? part.name() + &quot;:&quot; + ((FilePart) part).filename()</span><br><span class="line">              : part.name())</span><br><span class="line">          .collect(Collectors.joining(&quot;,&quot;, &quot;[&quot;, &quot;]&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //如果不是application/stream json則呼叫端無法滾動得到結果，將一直阻塞等待資料流結束或超時。</span><br><span class="line">    @GetMapping(value = &quot;stream&quot;, produces = MediaType.APPLICATION_STREAM_JSON_VALUE)</span><br><span class="line">    public Flux&lt;Post&gt; getBeanStream() &#123;</span><br><span class="line">        return Flux.interval(Duration.ofMillis(500))</span><br><span class="line">          .map(l -&gt; new Post(&quot;bian&quot;, LocalDateTime.now()))</span><br><span class="line">          .log();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Multipart是Htp请求的一种常见的数据结构，常用于表单提交。在spring mvc中，表单中的每个键值对会映射成一个个part。到了webflux，自然而然地转换成代表多个表单字段Flux。而返回值Flux，则对应了一种新的MediaType：APPLICATION_STREAM_JSON_VALUE。他的使用需要浏览器或者客户端的支持。从使用中来看，浏览器会对每一次返回的数据分批处理。如果简单的get调用，会在页面滚动打印返回值，直到Flux发射完成：<br>而如果接口并没有声明produces = MediaType.APPLICATION_STREAM_JSON_VALUE的媒体类型，浏览器将会在Flux所有数据发射完毕后一次性打印。</p>
+<h4 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h4><p>在webflux中使用WebSocket功能很简单，只要注册WebSocketHandlerAdapter用于websocket协议的握手，再定义对应路径的websocket消息处理器即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@ComponentScan</span><br><span class="line">@EnableWebFlux</span><br><span class="line">class WebConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public HandlerMapping handlerMapping() &#123;</span><br><span class="line">        Map&lt;String, WebSocketHandler&gt; map = new HashMap&lt;&gt;();</span><br><span class="line">        map.put(&quot;/echo&quot;, new EchoWebSocketHandler());</span><br><span class="line">        SimpleUrlHandlerMapping mapping = new SimpleUrlHandlerMapping();</span><br><span class="line">        mapping.setUrlMap(map);</span><br><span class="line">        return mapping;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean</span><br><span class="line">    WebSocketHandlerAdapter webSocketHandlerAdapter()&#123;</span><br><span class="line">        return new WebSocketHandlerAdapter();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">public class EchoWebSocketHandler implements WebSocketHandler &#123;</span><br><span class="line"></span><br><span class="line">    public EchoWebSocketHandler() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Mono&lt;Void&gt; handle(WebSocketSession session) &#123;</span><br><span class="line">        return session.send(    //1. 向一个websocket连接发送一段消息</span><br><span class="line">          session.receive()     //2. 获得入站消息流</span><br><span class="line">            .doOnNext(          //3. 对每一个websocket消息进行处理，相当于stream的map，返回的仍是一个流</span><br><span class="line">              WebSocketMessage::retain  //4. 保留消息（主要针对池化内存（内部使用了netty的ByteBuf），使之引用计数+1，避免过早回收）</span><br><span class="line">            )</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，通过webSocketSession.receive() 获得的Flux<websocketmessage>，其每一次发射的数据WebSocketMessage如果是再Netty容器中，是一个对Netty中ByteBuf的保证，而ByteBuf在使用中有一点要注意，就是谁使用谁释放、retain()和release()成对出现。所以当把Flux<websocketmessage>发射的WebSocketMessage传递给其他方法使用时，注意要retain()增加一次计数，避免上一级方法release()使ByteBuf引用计数归零，导致过早回收。关于Netty的内存使用，下面会写一篇简要的介绍文章。</websocketmessage></websocketmessage></p>
+<h4 id="Mongo"><a href="#Mongo" class="headerlink" title="Mongo"></a>Mongo</h4><p>MongoDB由于支持异步客户端，所以很适合在webflux项目中使用，spring-data-reactor也在第一时间做了支持。配合springboot的@EnableMongoAuditing注解，可以很快搭建异步mongo客户端。相关代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">@SpringBootApplication</span><br><span class="line">@EnableMongoAuditing</span><br><span class="line">public class Application &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">@Slf4j</span><br><span class="line">class DataInitializer implements CommandLineRunner &#123;</span><br><span class="line"></span><br><span class="line">    private final PostRepository posts;</span><br><span class="line"></span><br><span class="line">    public DataInitializer(PostRepository posts) &#123;</span><br><span class="line">        this.posts = posts;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run(String[] args) &#123;</span><br><span class="line">        log.info(&quot;start data initialization  ...&quot;);</span><br><span class="line">        this.posts</span><br><span class="line">          .deleteAll()</span><br><span class="line">          .thenMany(</span><br><span class="line">            Flux</span><br><span class="line">              .just(&quot;bianzhaoyu&quot;, &quot;xinan&quot;)</span><br><span class="line">              .flatMap(</span><br><span class="line">                name -&gt; this.posts.save(Post.builder().name(name).age(25).build())</span><br><span class="line">              )</span><br><span class="line">          )</span><br><span class="line">          .log()</span><br><span class="line">          .subscribe(</span><br><span class="line">            null,</span><br><span class="line">            null,</span><br><span class="line">            () -&gt; log.info(&quot;done initialization...&quot;)</span><br><span class="line">          );</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@RestController()</span><br><span class="line">@RequestMapping(value = &quot;/posts&quot;)</span><br><span class="line">class PostController &#123;</span><br><span class="line"></span><br><span class="line">    private final PostRepository posts;</span><br><span class="line"></span><br><span class="line">    public PostController(PostRepository posts) &#123;</span><br><span class="line">        this.posts = posts;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;&quot;)</span><br><span class="line">    public Flux&lt;Post&gt; all() &#123;</span><br><span class="line">        return this.posts.findAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;&quot;)</span><br><span class="line">    public Mono&lt;Post&gt; create(@RequestBody Post post) &#123;</span><br><span class="line">        return this.posts.save(post);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="line">    public Mono&lt;Post&gt; get(@PathVariable(&quot;id&quot;) String id) &#123;</span><br><span class="line">        return this.posts.findById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @PutMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="line">    public Mono&lt;Post&gt; update(@PathVariable(&quot;id&quot;) String id, @RequestBody Post post) &#123;</span><br><span class="line">        return this.posts.findById(id)</span><br><span class="line">          .map(p -&gt; &#123;</span><br><span class="line">              p.setName(post.getName());</span><br><span class="line">              p.setAge(post.getAge());</span><br><span class="line"></span><br><span class="line">              return p;</span><br><span class="line">          &#125;)</span><br><span class="line">          .flatMap(p -&gt; this.posts.save(p));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @DeleteMapping(&quot;/&#123;id&#125;&quot;)</span><br><span class="line">    public Mono&lt;Void&gt; delete(@PathVariable(&quot;id&quot;) String id) &#123;</span><br><span class="line">        return this.posts.deleteById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface PostRepository extends ReactiveMongoRepository&lt;Post, String&gt; &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@Data</span><br><span class="line">@ToString</span><br><span class="line">@Builder</span><br><span class="line">@NoArgsConstructor</span><br><span class="line">@AllArgsConstructor</span><br><span class="line">class Post &#123;</span><br><span class="line"></span><br><span class="line">    @Id</span><br><span class="line">    private String id;</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer age;</span><br><span class="line"></span><br><span class="line">    @CreatedDate</span><br><span class="line">    private LocalDateTime createdDate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  data:</span><br><span class="line">    mongodb:</span><br><span class="line">      uri: mongodb://localhost:27017/blog</span><br><span class="line">      grid-fs-database: images</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-data-mongodb-reactive&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h4><p>异步Redis客户端的使用和普通Redis客户端类似，只是RedisTemplate的方法都原生支持了异步调用。使用时只要引入spring-boot-starter-data-redis-reactive依赖，并注册ReactiveRedisTemplate即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">    public ReactiveRedisTemplate&lt;String, Post&gt; reactiveJsonPostRedisTemplate(</span><br><span class="line">      ReactiveRedisConnectionFactory connectionFactory) &#123;</span><br><span class="line">        </span><br><span class="line">        RedisSerializationContext&lt;String, Post&gt; serializationContext = RedisSerializationContext</span><br><span class="line">          .&lt;String, Post&gt;newSerializationContext(new StringRedisSerializer())</span><br><span class="line">          .hashKey(new StringRedisSerializer())</span><br><span class="line">          .hashValue(new Jackson2JsonRedisSerializer&lt;&gt;(Post.class))</span><br><span class="line">          .build();</span><br><span class="line">        return new ReactiveRedisTemplate&lt;&gt;(connectionFactory, serializationContext);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">@Component</span><br><span class="line">class PostRepository &#123;</span><br><span class="line"></span><br><span class="line">    ReactiveRedisOperations&lt;String, Post&gt; template;</span><br><span class="line"></span><br><span class="line">    public PostRepository(ReactiveRedisOperations&lt;String, Post&gt; template) &#123;</span><br><span class="line">        this.template = template;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Flux&lt;Post&gt; findAll() &#123;</span><br><span class="line">        return template.&lt;String, Post&gt;opsForHash().values(&quot;posts&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Mono&lt;Post&gt; findById(String id) &#123;</span><br><span class="line">        return template.&lt;String, Post&gt;opsForHash().get(&quot;posts&quot;, id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Mono&lt;Post&gt; save(Post post) &#123;</span><br><span class="line">        if (post.getId() != null) &#123;</span><br><span class="line">            String id = UUID.randomUUID().toString();</span><br><span class="line">            post.setId(id);</span><br><span class="line">        &#125;</span><br><span class="line">        return template.&lt;String, Post&gt;opsForHash().put(&quot;posts&quot;, post.getId(), post)</span><br><span class="line">          .log()</span><br><span class="line">          .map(p -&gt; post);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Mono&lt;Void&gt; deleteById(String id) &#123;</span><br><span class="line">        return template.&lt;String, Post&gt;opsForHash().remove(&quot;posts&quot;, id)</span><br><span class="line">          .flatMap(p -&gt; Mono.&lt;Void&gt;empty());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Mono&lt;Boolean&gt; deleteAll() &#123;</span><br><span class="line">        return template.&lt;String, Post&gt;opsForHash().delete(&quot;posts&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h4><p>mysql作为现在使用最广的数据存储工具，可以说是选择任何框架时必须考虑到兼容性的一点。但是遗憾的是，由于JDBC协议只支持同步访问，spring目前并没有直接对jdbc的reactor客户端的支持。虽然可以通过引入第三方异步数据库连接池，或者将普通jpa方法用Mono，Flux指定调用线程池的方式进行包装，但是作为关系型数据库最重要的一点：事务，却无法用@Transactional实现。虽然可以将一个事务的代码写在一个异步函数中，但却无法做到像同步方法那样，使用@Transactional各个业务方法，导致可复用性和实用性极低。这里使用一个异步jdbc线程池rxjava2-jdbc，相比与Mono/Flux包装的方式，rxjava2-jdbc在返回一个connection时是异步的，虽然由于jdbc协议的线程，执行sql语句的时候仍然是同步阻塞的。rxjava-jdbc内部维护了一个线程池用于执行阻塞代码，这也避免了我们自定义线程池的麻烦。<br>pom依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">          &lt;groupId&gt;com.github.davidmoten&lt;/groupId&gt;</span><br><span class="line">          &lt;artifactId&gt;rxjava2-jdbc&lt;/artifactId&gt;</span><br><span class="line">          &lt;version&gt;0.1-RC23&lt;/version&gt;</span><br><span class="line">      &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * spring-data-jpa是同步的，repository返回的结果并不是Mono或者Flux形式。</span><br><span class="line"> *     可以使用第三方异步jdbc连接池rxjava2-jdbc，但是由于每个方法是异步的，</span><br><span class="line"> * 当数个异步方法组合起来时，并不能保证每个方法都是由一个线程按顺序调用的，</span><br><span class="line"> * 这就使基于ThreadLocal的@Transactional无法使用</span><br><span class="line"> *     当然，可以手动在一个异步方法中开启并提交事务，但是这还是失去了@Transactional组合</span><br><span class="line"> * 不同方法到一个事物的便利性和可扩展性</span><br><span class="line"> * @author xinan</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class RxJava2PostRepository &#123;</span><br><span class="line">    private Database db;</span><br><span class="line"></span><br><span class="line">    RxJava2PostRepository(Database db) &#123;</span><br><span class="line">        this.db = db;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Observable&lt;Post&gt; findAll() &#123;</span><br><span class="line">        return this.db.select(&quot;select * from posts&quot;)</span><br><span class="line">            .get(</span><br><span class="line">                rs -&gt; new Post(rs.getLong(&quot;id&quot;),</span><br><span class="line">                    rs.getString(&quot;name&quot;),</span><br><span class="line">                    rs.getInt(&quot;age&quot;)</span><br><span class="line">                )</span><br><span class="line">            )</span><br><span class="line">            .toObservable();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Single&lt;Post&gt; findById(Long id) &#123;</span><br><span class="line">        return this.db.select(&quot;select * from posts where id=?&quot;)</span><br><span class="line">            .parameter(id)</span><br><span class="line">            .get(</span><br><span class="line">                rs -&gt; new Post(rs.getLong(&quot;id&quot;),</span><br><span class="line">                    rs.getString(&quot;name&quot;),</span><br><span class="line">                    rs.getInt(&quot;age&quot;)</span><br><span class="line">                )</span><br><span class="line">            )</span><br><span class="line">            .firstElement()</span><br><span class="line">            .toSingle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Single&lt;Integer&gt; save(Post post) &#123;</span><br><span class="line">        return this.db.update(&quot;insert into posts(name, age) values(?, ?)&quot;)</span><br><span class="line">            .parameters(post.getName(), post.getAge())</span><br><span class="line">            .returnGeneratedKeys()</span><br><span class="line">            .getAs(Integer.class)</span><br><span class="line">            .firstElement()</span><br><span class="line">            .toSingle();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String sql = &quot;insert into posts(title, content) values(?, ?)&quot;;</span><br><span class="line"></span><br><span class="line">    //使用事务</span><br><span class="line">    public Single&lt;Integer&gt; saveTx(Post post) &#123;</span><br><span class="line">        return db.connection()</span><br><span class="line">          .map(connection -&gt; &#123;</span><br><span class="line">              connection.setAutoCommit(false);</span><br><span class="line">              PreparedStatement pstmt = connection.prepareStatement(sql);</span><br><span class="line">              pstmt.setInt(1, post.getAge());</span><br><span class="line">              pstmt.setInt(2, post.getAge());</span><br><span class="line">              int i = pstmt.executeUpdate();</span><br><span class="line">              pstmt.close();</span><br><span class="line">              connection.commit();</span><br><span class="line">              return i;</span><br><span class="line">          &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/27/webflux/" data-id="cjy8or7ji000siwnwxwtw9jzn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/27/mysql/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          mysql
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/27/reactor/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">reactor</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

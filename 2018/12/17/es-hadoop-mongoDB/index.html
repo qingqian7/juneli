@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>es_hadoop_mongoDB | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="elasticsearch ，hadoop,mongdb 对比IT界在过去几年中出现了一个有趣的现象。很多新的技术出现并立即拥抱了“大数据”。稍微老一点的技术也会将大数据添进自己的特性，避免落大部队太远，我们看到了不同技术之间的边际的模糊化。假如你有诸如Elasticsearch或者Solr这样的搜索引擎，它们存储着JSON文档，MongoDB存着JSON文档，或者一堆JSON文档存放在一个Had">
+<meta property="og:type" content="article">
+<meta property="og:title" content="es_hadoop_mongoDB">
+<meta property="og:url" content="http://yoursite.com/2018/12/17/es-hadoop-mongoDB/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="elasticsearch ，hadoop,mongdb 对比IT界在过去几年中出现了一个有趣的现象。很多新的技术出现并立即拥抱了“大数据”。稍微老一点的技术也会将大数据添进自己的特性，避免落大部队太远，我们看到了不同技术之间的边际的模糊化。假如你有诸如Elasticsearch或者Solr这样的搜索引擎，它们存储着JSON文档，MongoDB存着JSON文档，或者一堆JSON文档存放在一个Had">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:53.692Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="es_hadoop_mongoDB">
+<meta name="twitter:description" content="elasticsearch ，hadoop,mongdb 对比IT界在过去几年中出现了一个有趣的现象。很多新的技术出现并立即拥抱了“大数据”。稍微老一点的技术也会将大数据添进自己的特性，避免落大部队太远，我们看到了不同技术之间的边际的模糊化。假如你有诸如Elasticsearch或者Solr这样的搜索引擎，它们存储着JSON文档，MongoDB存着JSON文档，或者一堆JSON文档存放在一个Had">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-es-hadoop-mongoDB" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/es-hadoop-mongoDB/" class="article-date">
+  <time datetime="2018-12-17T13:55:13.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      es_hadoop_mongoDB
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="elasticsearch-，hadoop-mongdb-对比"><a href="#elasticsearch-，hadoop-mongdb-对比" class="headerlink" title="elasticsearch ，hadoop,mongdb 对比"></a>elasticsearch ，hadoop,mongdb 对比</h3><p>IT界在过去几年中出现了一个有趣的现象。很多新的技术出现并立即拥抱了“大数据”。稍微老一点的技术也会将大数据添进自己的特性，避免落大部队太远，我们看到了不同技术之间的边际的模糊化。假如你有诸如Elasticsearch或者Solr这样的搜索引擎，它们存储着JSON文档，MongoDB存着JSON文档，或者一堆JSON文档存放在一个Hadoop集群的HDFS中。你可以使用这三种配置完成很多同养的事情。<br>ES是否可以作为一个NoSQL数据库？粗看，这句话说的不太对，但是这是一个合理的场景。类似地，MongoDB在MapReduce的基础上使用分片的技术同样可以完成Hadoop可以做的工作。当然使用众多功能，我们可以在Hadoop之上（Hive、HBase、Pig和同样的一些）你也可以用多种方式查询Hadoop集群中的数据。<br>那么，我们现在是否能说Hadoop、MongoDB和Elasticsearch这三个是完全相同的呢？显然不行！每个工具都有自身最为适用的场景，但是每个都有相当的灵活性能够胜任不同的角色。现在的问题就变成“这些技术的最合适的使用场景是什么？”。下面我们来瞧瞧。<br>Elasticsearch已经超越了其最初的纯搜索引擎的角色，现在已经增加了分析和可视化的特性——但是它的核心仍旧是一个全文搜索引擎。Elasticsearch建立在Lucene之上并且支持极其快速的查询和丰富的查询语法。如果你有数百万的文档需要通过关键词进行定位时，Elasticsearch肯定是最佳选择。当然，如果你的文档是JSON的，你就可以把Elasticsearch当作一种轻量级的“NoSQL数据库”。但是Elasticsearch不是一个合适的数据库引擎，对复杂的查询和聚合并不是很强，尽管统计facet可以提供一定的关于给定查询的统计信息的支持。Elasticsearch中的facet主要是用来支持分面的浏览功能。</p>
+<a id="more"></a>
+<p>目前Elasticsearch已经增加了aggregation的功能</p>
+<p>如果你在寻找一个对应于一个关键词查询的少量的文档集合，并且要支持在这些结果中分面的导航，那么Elasticsearch肯定是最好的选择。如果你需要进行更加复杂的计算，对数据执行服务端的脚本，轻松地运行MapReduce job，那么MongoDB或者Hadoop就进入待选项中。<br>MongoDB是NoSQL数据库，被设计成一个高可扩展，并且有自动分片的功能及一些额外性能优化的功能。MongoDB是一个面向文档的数据库，以JSON的形式进行数据的存储（准确地说可以称为BSON，对JSON进行了一些增强）——例如，一个native数据类型。MongoDB提供了一个文本索引类型来支持全文检索，所以我们可以看到在Elasticsearch和MongoDB之间的界限，基本的关键词搜索对应于文档的集合。<br>MongoDB超过Elasticsearch的地方在于其对于服务器端js脚本的支持、聚合的管道、MapReduce的支持和capped collections。使用MongoDB，你可以使用聚合管道来处理一个集合中的文档，通过一个管道操作的序列来多步地对文档进行处理。管道操作可以生成全新的文档并且从最终的结果中移除文档。这是一个在检索数据时的相当强的过滤、处理和转化数据的特点。MongoDB也支持对一个数据collection进行map/reduce job的执行，使用定制的js函数进行操作的map和reduce过程。这就保证了MongoDB可以对选定的数据执行任意类型的计算或者转换的终极的灵活性。<br>MongoDB另一个极其强大的特性称之为“Capped collections”。使用这个特性，用户可以定义一个collection的最大size——然后这个collection可以被盲写，并且会roll-over必须的数据来获取log和其他供分析的流数据。<br>你看到，Elasticsearch和MongoDB有一个可能的应用场景的重叠，它们不是同样的工具。但是Hadoop呢？Hadoop就是MapReduce，这已经有MongoDB就地支持了啊！是不是还有一个专属于Hadoop的场景，MongoDB就只是适合。<br>有！Hadoop是老MapReduce了，提供了最为灵活和强大的环境来进行大量数据的处理，毫无疑问的是能够搞定不能使用Elasticsearch或者MongoDB处理的场景。<br>为了更加清楚地认识到这点，看看Hadoop如何使用HDFS抽象存储的——从关联的计算特性上。通过HDFS中存储的数据，任意job都可以对于数据进行运算，使用写在核心MapReduce API上，或者使用Hadoop流技术直接使用native语言编程。基于Hadoop 2和YARN，甚至核心编程模型都已经被抽象了，你不再受到MapReduce的牵制了。使用YARN你可以在Hadoop上实现MPI并且用那种方式写job。<br>额外地，Hadoop生态系统提供了一个交错的工具集合，建立在HDFS和核心MapReduce之上，来进行数据的查询、分析和处理。Hive提供了一个类似SQL的语言，使得业务分析可以使用一个用户习惯的语法进行查询。HBASE提供了一个基于Hadoop的面向列的数据库。Pig和Sizzle提供了两个更加不同的编程模型来查询Hadoop数据。对存储在HDFS中的数据的使用，你可以继承Mahout的机器学习的能力至你的工具集。当使用RHadoop时，你可以直接使用R统计语言来对Hadoop数据执行高级的统计分析<br>所以，尽管Hadoop和MongoDB也有部分重叠的应用场景并且共同拥有一些有用的功能（无缝的水平扩展），但是两者之间还是有着特定的场景。如果你仅仅想要通过关键字和简单的分析，那么Elasticsearch可以完成任务；如果你需要查询文档，并且包含更加复杂的分析过程，那么MongoDB相当适合；如果你有一个海量的数据，需要大量不同的复杂处理和分析，那么Hadoop提供了最为广泛的工具和灵活性。<br>一个亘古不变的道理就是选择手头最适合的工具做事。在大数据这样的背景下，技术层出不穷，技术间的界限也是相当的模糊，这对我们的选择是一件相当困难的事情。正如你所见，特定的场景有着最适合的技术，这种差异性是相当重要的。最好的消息就是你不在限定在某一种工具或者技术上。依赖于你面对的场景，这就使得我们能够构建一个整合的系统。例如，我们知道Elasticsearch和Hadoop是可以很好地一起共事的，使用Elasticsearch快速的关键词查询，Hadoop job则能处理相当复杂的分析。<br>最终，采用了最大的搜索和细致的分析来确认最为合适的选择。在选择任何技术或者平台时，需要仔细地验证它们，理解这个东东适合哪些场景，哪里可以进行优化，需要做出哪些牺牲。从一个小小的预研项目开始，确认完毕后，再将技术应用到真正的平台上，缓慢地升级到新的层级。</p>
+<p>作者：朱小虎XiaohuZhu<br>链接：<a href="https://www.jianshu.com/p/2c7b0c76fa04" target="_blank" rel="noopener">https://www.jianshu.com/p/2c7b0c76fa04</a><br>來源：简书<br>简书著作权归作者所有，任何形式的转载都请联系作者获得授权并注明出处。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/es-hadoop-mongoDB/" data-id="cjy8or7hg0003iwnwyivpwubn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/18/elasticsearh-grammer/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          elasticsearh_grammer
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/17/springboot-elasticsearch/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">springboot_elasticsearch</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

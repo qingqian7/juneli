@@ -5,15 +5,19 @@
   
 
   
-  <title>Archives: 2019/6 | Hexo</title>
+  <title>gateway | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2019/06/index.html">
+  <meta name="description" content="springcloud –gateway####前言Zuul1 是基于 Servlet 框架构建，如图所示，采用的是阻塞和多线程方式，即一个线程处理一次连接请求，这种方式在内部延迟严重、设备故障较多情况下会引起存活的连接增多和线程增加的情况发生。而spring官方是不打算将zuul2继承到springcloud里面面，应该是准备用gateway来替代zuul,gateway底层是用netty实现的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gateway">
+<meta property="og:url" content="http://yoursite.com/2018/12/10/gateway/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="springcloud –gateway####前言Zuul1 是基于 Servlet 框架构建，如图所示，采用的是阻塞和多线程方式，即一个线程处理一次连接请求，这种方式在内部延迟严重、设备故障较多情况下会引起存活的连接增多和线程增加的情况发生。而spring官方是不打算将zuul2继承到springcloud里面面，应该是准备用gateway来替代zuul,gateway底层是用netty实现的">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:53.855Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="gateway">
+<meta name="twitter:description" content="springcloud –gateway####前言Zuul1 是基于 Servlet 框架构建，如图所示，采用的是阻塞和多线程方式，即一个线程处理一次连接请求，这种方式在内部延迟严重、设备故障较多情况下会引起存活的连接增多和线程增加的情况发生。而spring官方是不打算将zuul2继承到springcloud里面面，应该是准备用gateway来替代zuul,gateway底层是用netty实现的">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -60,40 +64,62 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/06/22/redis-cluster/" class="archive-article-date">
-  <time datetime="2019-06-22T08:00:14.000Z" itemprop="datePublished">Jun 22</time>
+        <section id="main"><article id="post-gateway" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/10/gateway/" class="article-date">
+  <time datetime="2018-12-10T13:32:26.000Z" itemprop="datePublished">2018-12-10</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/06/22/redis-cluster/">redis-cluster</a>
+    <h1 class="article-title" itemprop="name">
+      gateway
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="springcloud-–gateway"><a href="#springcloud-–gateway" class="headerlink" title="springcloud –gateway"></a>springcloud –gateway</h2><p>####前言<br>Zuul1 是基于 Servlet 框架构建，如图所示，采用的是阻塞和多线程方式，即一个线程处理一次连接请求，这种方式在内部延迟严重、设备故障较多情况下会引起存活的连接增多和线程增加的情况发生。<br>而spring官方是不打算将zuul2继承到springcloud里面面，应该是准备用gateway来替代zuul,gateway底层是用netty实现的，所以gateway是采用的无阻塞的异步的架构，相对于zuul来说好很多。</p>
+<h3 id="gateway使用方法"><a href="#gateway使用方法" class="headerlink" title="gateway使用方法"></a>gateway使用方法</h3><p>首先添加</p>
 
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/10/gateway/" data-id="cjy8or7hl0006iwnw8gbu9s0k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/17/elasticsearch/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          elasticsearch
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/10/rabbitmq/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">rabbitmq</div>
+    </a>
+  
+</nav>
+
+  
+</article>
 
 </section>
         

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>springboot_elasticsearch | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="elasticsearch的使用以及和springboot结合使用知道elasticsearch的存储原理之后，这里就具体介绍elasticsearch的使用以及和springboot结合使用的方法 elasticsearch的使用window下直接去官网下载elasticsearch的压缩包，解压后，运行bin下面的elasticsearch.bat即可，这样就相当于运行了一个elasticse">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot_elasticsearch">
+<meta property="og:url" content="http://yoursite.com/2018/12/17/springboot-elasticsearch/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="elasticsearch的使用以及和springboot结合使用知道elasticsearch的存储原理之后，这里就具体介绍elasticsearch的使用以及和springboot结合使用的方法 elasticsearch的使用window下直接去官网下载elasticsearch的压缩包，解压后，运行bin下面的elasticsearch.bat即可，这样就相当于运行了一个elasticse">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:48.353Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springboot_elasticsearch">
+<meta name="twitter:description" content="elasticsearch的使用以及和springboot结合使用知道elasticsearch的存储原理之后，这里就具体介绍elasticsearch的使用以及和springboot结合使用的方法 elasticsearch的使用window下直接去官网下载elasticsearch的压缩包，解压后，运行bin下面的elasticsearch.bat即可，这样就相当于运行了一个elasticse">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot-elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/springboot-elasticsearch/" class="article-date">
+  <time datetime="2018-12-17T12:31:03.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      springboot_elasticsearch
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="elasticsearch的使用以及和springboot结合使用"><a href="#elasticsearch的使用以及和springboot结合使用" class="headerlink" title="elasticsearch的使用以及和springboot结合使用"></a>elasticsearch的使用以及和springboot结合使用</h3><p>知道elasticsearch的存储原理之后，这里就具体介绍elasticsearch的使用以及和springboot结合使用的方法</p>
+<h4 id="elasticsearch的使用"><a href="#elasticsearch的使用" class="headerlink" title="elasticsearch的使用"></a>elasticsearch的使用</h4><p>window下直接去官网下载elasticsearch的压缩包，解压后，运行bin下面的elasticsearch.bat即可，这样就相当于运行了一个elasticsearch的server进程，检测运行是否成功：<br>使用浏览器或者postman（本质上一样）发送get请求到 <a href="http://localhost:9200/?pretty" target="_blank" rel="noopener">http://localhost:9200/?pretty</a>  </p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;IFU2Z7d&quot;,</span><br><span class="line">  &quot;cluster_name&quot;: &quot;CollectorDBCluster&quot;,</span><br><span class="line">  &quot;cluster_uuid&quot;: &quot;IpRNLODrTvaPz97IC6tiCA&quot;,</span><br><span class="line">  &quot;version&quot;: &#123;</span><br><span class="line">    &quot;number&quot;: &quot;6.5.1&quot;,</span><br><span class="line">    &quot;build_flavor&quot;: &quot;default&quot;,</span><br><span class="line">    &quot;build_type&quot;: &quot;zip&quot;,</span><br><span class="line">    &quot;build_hash&quot;: &quot;8c58350&quot;,</span><br><span class="line">    &quot;build_date&quot;: &quot;2018-11-16T02:22:42.182257Z&quot;,</span><br><span class="line">    &quot;build_snapshot&quot;: false,</span><br><span class="line">    &quot;lucene_version&quot;: &quot;7.5.0&quot;,</span><br><span class="line">    &quot;minimum_wire_compatibility_version&quot;: &quot;5.6.0&quot;,</span><br><span class="line">    &quot;minimum_index_compatibility_version&quot;: &quot;5.0.0&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;tagline&quot;: &quot;You Know, for Search&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很装逼的 “You Know, for Search”…..<br>针对es的增删查改</p>
+<p>查找：<br>curl get <a href="http://localhost:9200/lijun/user/1" target="_blank" rel="noopener">http://localhost:9200/lijun/user/1</a>    表示查找id为1的user<br>curl get <a href="http://localhost:9200/lijun/user/_search?q=name:lijun+age=24" target="_blank" rel="noopener">http://localhost:9200/lijun/user/_search?q=name:lijun+age=24</a><br>表示查找name=lijun和age=24的并集，注意这里不是只有name=lijun并且age=24的才会被查询到，因为查询是根据匹配相似度（_score属性分值）来查询，也就是说，只有age=24或者name=lijun的文档也有可能被查询匹配到</p>
+<p>curl get <a href="http://localhost:9200/lijun/user/_search?q=lijun" target="_blank" rel="noopener">http://localhost:9200/lijun/user/_search?q=lijun</a>  表示user文档全文中出现lijun的<br>curl get <a href="http://localhost:9200/lijun/user/_search?q=name:lijun" target="_blank" rel="noopener">http://localhost:9200/lijun/user/_search?q=name:lijun</a>  表示user文档中出现name为lijun的  和上面的不一样的  注意<br>下面讲解es查询中的关键</p>
+<p>GET /_search?q=2014              # 12 results<br>GET /_search?q=2014-09-15        # 12 results !<br>GET /_search?q=date:2014-09-15   # 1  result<br>GET /_search?q=date:2014         # 0  results !<br>这四个 看起来相似，但结果不同，下面给出具体分析<br>es中的精确值字段搜索和代表全文的字段的搜索，是区分es搜索引擎和其他数据库的关键<br>es中的数据可以概括的分为两类：精确值和全文<br>精确值就是要精确的匹配的值，例如 Foo 和foo 就是两个不同的值，2014-09 和2014-09-01也是两个不同的值。所以精确值要么就匹配查询，要么不匹配  类似于sql语句的where中的条件</p>
+<p>而查询全文就微妙很多，全文查询关注的不只是“这个文档匹配查询吗”，更多的是“该文档匹配查询的成都有多大”，换据话说就是该文档与给定查询的文档的相关性如何。<br>因为很少对全文类型的域做精确匹配。相反，我们希望再文本类型的域中搜索，并且希望搜索能理解我们的意图：</p>
+<ul>
+<li>搜索 UK ，会返回包含 United Kindom 的文档。</li>
+<li>搜索 jump ，会匹配 jumped ， jumps ， jumping ，甚至是 leap 。</li>
+<li>搜索 johnny walker 会匹配 Johnnie Walker ， johnnie depp 应该匹配 Johnny Depp 。</li>
+<li>fox news hunting 应该返回福克斯新闻（ Foxs News ）中关于狩猎的故事，同时， fox hunting news 应该返回关于猎狐的故事。<br>为了实现这种效果，es中对全文文档进行分析，之后再对分析结果创建倒排索引。而这里的分析，可以简单的理解为对文档进行规范化。<br>例如统一变成小写，英文中去除“the”“and”“a”这种常见的并且与搜索文档相关性不大的词，将单词规范化为词根等等。这是通过内置分析器实现。</li>
+</ul>
+<h4 id="内置分析器编辑"><a href="#内置分析器编辑" class="headerlink" title="内置分析器编辑"></a>内置分析器编辑</h4><p>但是， Elasticsearch还附带了可以直接使用的预包装的分析器。 接下来我们会列出最重要的分析器。为了证明它们的差异，我们看看每个分析器会从下面的字符串得到哪些词条：<br>“Set the shape to semi-transparent by calling set_trans(5)”</p>
+<h4 id="标准分析器"><a href="#标准分析器" class="headerlink" title="标准分析器"></a>标准分析器</h4><p>标准分析器是Elasticsearch默认使用的分析器。它是分析各种语言文本最常用的选择。它根据 Unicode 联盟 定义的 单词边界 划分文本。删除绝大部分标点。最后，将词条小写。它会产生<br>set, the, shape, to, semi, transparent, by, calling, set_trans, 5</p>
+<h4 id="简单分析器"><a href="#简单分析器" class="headerlink" title="简单分析器"></a>简单分析器</h4><p>简单分析器在任何不是字母的地方分隔文本，将词条小写。它会产生<br>set, the, shape, to, semi, transparent, by, calling, set, trans</p>
+<h4 id="空格分析器"><a href="#空格分析器" class="headerlink" title="空格分析器"></a>空格分析器</h4><p>空格分析器在空格的地方划分文本。它会产生<br>Set, the, shape, to, semi-transparent, by, calling, set_trans(5)</p>
+<h4 id="语言分析器"><a href="#语言分析器" class="headerlink" title="语言分析器"></a>语言分析器</h4><p>特定语言分析器可用于 很多语言。它们可以考虑指定语言的特点。例如， 英语 分析器附带了一组英语无用词（常用单词，例如 and 或者 the ，它们对相关性没有多少影响），它们会被删除。 由于理解英语语法的规则，这个分词器可以提取英语单词的 词干 。</p>
+<p>英语 分词器会产生下面的词条：<br>set, shape, semi, transpar, call, set_tran, 5<br>注意看 transparent<code>、</code>calling 和 set_trans 已经变为词根格式</p>
+<h3 id="什么时候使用分析器编辑"><a href="#什么时候使用分析器编辑" class="headerlink" title="什么时候使用分析器编辑"></a>什么时候使用分析器编辑</h3><p>当我们 索引 一个文档，它的全文域被分析成词条以用来创建倒排索引。 但是，当我们在全文域 搜索 的时候，我们需要将查询字符串通过 相同的分析过程 ，以保证我们搜索的词条格式与索引中的词条格式一致。<br>全文查询，理解每个域是如何定义的，因此它们可以做 正确的事：</p>
+<ul>
+<li>当你查询一个 全文 域时， 会对查询字符串应用相同的分析器，以产生正确的搜索词条列表。</li>
+<li>当你查询一个 精确值 域时，不会分析查询字符串， 而是搜索你指定的精确值。<br>现在你可以理解在 为什么上面的4个查询为什么有差别</li>
+</ul>
+<p>date 域包含一个精确值：单独的词条 <code>2014-09-15</code>。<br>_all 域是一个全文域，所以分词进程将日期转化为三个词条： <code>2014</code>， <code>09</code>， 和 <code>15</code>。<br>当我们在 _all 域查询 2014<code>，它匹配所有的12条推文，因为它们都含有</code>2014 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /_search?q=2014              # 12 results</span><br></pre></td></tr></table></figure>
+
+<p>当我们在 _all 域查询 2014-09-15<code>，它首先分析查询字符串，产生匹配</code>2014<code>，</code>09<code>， 或</code>15 中 任意 词条的查询。这也会匹配所有12条推文，因为它们都含有 2014 ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /_search?q=2014-09-15        # 12 results !</span><br></pre></td></tr></table></figure>
+
+<p>当我们在 date 域查询 <code>2014-09-15</code>，它寻找 精确 日期，只找到一个推文：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /_search?q=date:2014-09-15   # 1  result</span><br></pre></td></tr></table></figure>
+
+<p>当我们在 date 域查询 <code>2014</code>，它找不到任何文档，因为没有文档含有这个精确日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /_search?q=date:2014         # 0  results !</span><br></pre></td></tr></table></figure>
+
+<h3 id="与springboot结合使用"><a href="#与springboot结合使用" class="headerlink" title="与springboot结合使用"></a>与springboot结合使用</h3><p>首先pom中加入elasticsearch依赖，其次application.yml中配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 8080</span><br><span class="line">spring:</span><br><span class="line">  data:</span><br><span class="line">    elasticsearch:</span><br><span class="line">      cluster-nodes: 127.0.0.1:9300</span><br><span class="line">      repositories:</span><br><span class="line">        enabled: true</span><br><span class="line">      cluster-name: CollectorDBCluster</span><br></pre></td></tr></table></figure>
+
+<p>注意这里的port是9300而不是上面的9200，因为Java连接es是使用9300端口，而使用restApi和http等是使用9200端口，这里记得区分</p>
+<p>其次是Java对象隐射成文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">//这里一个索引里面只能有一个类型  比如 &quot;lijun&quot;这个索引里就只能有user这个类型了   如果再映射其他类型进去  就会报错</span><br><span class="line">@Document(indexName = &quot;lijun&quot;,type = &quot;user&quot;) //indexName 索引名（必须小写，不然会报错org.elasticsearch.indices.InvalidIndexNameException），相当于数据库名，type 索引类型，相当于表名</span><br><span class="line">public class User implements Serializable &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private int age;</span><br><span class="line">    private String  gender;</span><br><span class="line">    private String name;</span><br><span class="line">    private List&lt;String&gt; hobbies;</span><br><span class="line"></span><br><span class="line">    public int getAge() &#123;</span><br><span class="line">        return age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAge(int age) &#123;</span><br><span class="line">        this.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(int id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getGender() &#123;</span><br><span class="line">        return gender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGender(String gender) &#123;</span><br><span class="line">        this.gender = gender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public List&lt;String&gt; getHobbies() &#123;</span><br><span class="line">        return hobbies;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setHobbies(List&lt;String&gt; hobbies) &#123;</span><br><span class="line">        this.hobbies = hobbies;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public User(int id ,int age,String  gender,String name,List&lt;String&gt; hobbies)&#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.age = age;</span><br><span class="line">        this.gender = gender;</span><br><span class="line">        this.name = name;</span><br><span class="line">        this.hobbies = hobbies;</span><br><span class="line">    &#125;</span><br><span class="line">    public User()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>要注意的已经代码里已经说明了<br>最后是继承ElasticSearchRepository接口，跟使用JpaRepository一样,能够使用的接口方法也和JpaRepository一样，不得不说spring团队为Java做的贡献太大了，简化和统一了很多开发方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public interface EmployeeRepository extends ElasticsearchRepository&lt;User,Long&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至于在controller或者service中使用，直接注入这个接口然后使用接口的方法就行。<br>更多关于es的知识，可以到官网学习<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/analysis-intro.html" target="_blank" rel="noopener">es官网</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/springboot-elasticsearch/" data-id="cjy8or7iy000kiwnwb8hgdx6t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/17/es-hadoop-mongoDB/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          es_hadoop_mongoDB
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/12/17/elasticsearch/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">elasticsearch</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

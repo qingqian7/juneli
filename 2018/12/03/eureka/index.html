@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>eureka | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="eureka server 注意事项高可用设置通过多运行几个eureka server ，并且几个eureka server之间互相向对方所在eureka端口注册，这样可以做到当一个server不可用时，其他的server仍然具有所有的注册信息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eureka">
+<meta property="og:url" content="http://yoursite.com/2018/12/03/eureka/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="eureka server 注意事项高可用设置通过多运行几个eureka server ，并且几个eureka server之间互相向对方所在eureka端口注册，这样可以做到当一个server不可用时，其他的server仍然具有所有的注册信息">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:54.542Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="eureka">
+<meta name="twitter:description" content="eureka server 注意事项高可用设置通过多运行几个eureka server ，并且几个eureka server之间互相向对方所在eureka端口注册，这样可以做到当一个server不可用时，其他的server仍然具有所有的注册信息">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-eureka" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/03/eureka/" class="article-date">
+  <time datetime="2018-12-03T12:34:35.000Z" itemprop="datePublished">2018-12-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      eureka
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="eureka-server-注意事项"><a href="#eureka-server-注意事项" class="headerlink" title="eureka server 注意事项"></a>eureka server 注意事项</h2><h4 id="高可用设置"><a href="#高可用设置" class="headerlink" title="高可用设置"></a>高可用设置</h4><p>通过多运行几个eureka server ，并且几个eureka server之间互相向对方所在eureka端口注册，这样可以做到当一个server不可用时，其他的server仍然具有所有的注册信息</p>
+<a id="more"></a>
+<h4 id="监听eureka-client-的各种事项或者状态"><a href="#监听eureka-client-的各种事项或者状态" class="headerlink" title="监听eureka client 的各种事项或者状态"></a>监听eureka client 的各种事项或者状态</h4><p>通过EventListener 来监听eureka client的状态</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class EurekaStateChangeListener &#123;</span><br><span class="line">    @EventListener</span><br><span class="line">    public void listen(EurekaInstanceCanceledEvent event)&#123;</span><br><span class="line">        System.err.println(event.getServerId() + &quot;\t&quot; + event.getAppName() + &quot;服务下线&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @EventListener</span><br><span class="line">    public void listen(EurekaInstanceRegisteredEvent event)&#123;</span><br><span class="line">        System.err.println(event.getInstanceInfo().getAppName() + &quot; 服务注册成功&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中可以监听多个事件，这里只举两个，并且可以在这些监听函数里做更多的事，比如写日志或者发邮件/消息通知开发者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">eureka:</span><br><span class="line">  client:</span><br><span class="line">    register-with-eureka: false</span><br><span class="line">    fetch-registry: false</span><br></pre></td></tr></table></figure>
+
+<p>这里是表示不讲自己注册为微服务，不然会报错</p>
+<h2 id="eureka-client-注意事项"><a href="#eureka-client-注意事项" class="headerlink" title="eureka client 注意事项"></a>eureka client 注意事项</h2><h4 id="要在启动类上加-EnableDiscoveryClient注解"><a href="#要在启动类上加-EnableDiscoveryClient注解" class="headerlink" title="要在启动类上加@EnableDiscoveryClient注解"></a>要在启动类上加@EnableDiscoveryClient注解</h4><p> 不加注解虽然能在浏览器界面上看到状态为up的instance，但是可能会在调用时报错404</p>
+<h4 id="多实例"><a href="#多实例" class="headerlink" title="多实例"></a>多实例</h4><p>多实例时，通过feign或者restTemplate调用就只能通过serviceId来做路径</p>
+<h4 id="出现红色提示-EMERGENCY-EUREKA-MAY-BE-INCORRECTLY-CLAIMING-INSTANCES-ARE-UP-WHEN-THEY’RE-NOT-RENEWALS-ARE-LESSER-THAN-THRESHOLD-AND-HENCE-THE-INSTANCES-ARE-NOT-BEING-EXPIRED-JUST-TO-BE-SAFE"><a href="#出现红色提示-EMERGENCY-EUREKA-MAY-BE-INCORRECTLY-CLAIMING-INSTANCES-ARE-UP-WHEN-THEY’RE-NOT-RENEWALS-ARE-LESSER-THAN-THRESHOLD-AND-HENCE-THE-INSTANCES-ARE-NOT-BEING-EXPIRED-JUST-TO-BE-SAFE" class="headerlink" title="出现红色提示 EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY’RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE."></a>出现红色提示 EMERGENCY! EUREKA MAY BE INCORRECTLY CLAIMING INSTANCES ARE UP WHEN THEY’RE NOT. RENEWALS ARE LESSER THAN THRESHOLD AND HENCE THE INSTANCES ARE NOT BEING EXPIRED JUST TO BE SAFE.</h4><p>实际生产过程中，经常会有网络抖动等问题造成服务实例与eurekaserver的心跳未能如期持，但服务本身是健康的，这个时候如果按照租约提出原则剔除实例，会造成误判。eureka为了解决这个问题引入了自我保护机制，当最近一分钟收到的续约次数少于阈值的话，就关闭租约失效剔除，禁止定时任务剔除失效的实例。可以通过下列参数关闭该机制：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.enableSelfPreservation=false</span><br></pre></td></tr></table></figure>
+
+<p>生产环境中可以通过调整参数提高触发门槛：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eureka.instance.leaseRenewalIntervalInSeconds=10   ##默认30</span><br><span class="line">eureka.server.renewalPercentThreshold=0.49   ##默认0.85</span><br></pre></td></tr></table></figure>
+
+<p>eureka 这块儿需要注意的不多，难点也不大，所以就写这么多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/03/eureka/" data-id="cjy8or7hi0004iwnw2wv77qqg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/12/03/feign/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          feign
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

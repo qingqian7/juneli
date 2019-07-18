@@ -93,9 +93,52 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/18/integer/" data-id="cjy8olvrs0001gwnw74tzvu55" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/18/integer/" data-id="cjy8or7hm0007iwnwjgouxql0" class="article-share-link">Share</a>
       
       
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-lock_20190718_210149" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/16/lock_20190718_210149/" class="article-date">
+  <time datetime="2019-07-16T02:04:22.000Z" itemprop="datePublished">2019-07-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/07/16/lock_20190718_210149/">lock</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="synchronized与Lock"><a href="#synchronized与Lock" class="headerlink" title="synchronized与Lock"></a>synchronized与Lock</h4><p>Java中有两种加锁的方式：一种是用synchronized关键字，另一种是用Lock接口的实现类。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/07/16/lock_20190718_210149/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/07/16/lock_20190718_210149/" data-id="cjy8or7in000hiwnw8ivmpmx2" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+
     </footer>
   </div>
   
@@ -134,7 +177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/16/lock/" data-id="cjy8olvsc0002gwnwk67ixxti" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/16/lock/" data-id="cjy8or7il000giwnwfpousx7j" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
@@ -146,10 +189,10 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-redis-cluster" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2019/06/30/hello-world/" class="article-date">
-  <time datetime="2019-06-30T14:41:13.554Z" itemprop="datePublished">2019-06-30</time>
+    <a href="/2019/06/22/redis-cluster/" class="article-date">
+  <time datetime="2019-06-22T08:00:14.000Z" itemprop="datePublished">2019-06-22</time>
 </a>
     
   </div>
@@ -160,7 +203,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/30/hello-world/">Hello World</a>
+      <a class="article-title" href="/2019/06/22/redis-cluster/">redis-cluster</a>
     </h1>
   
 
@@ -168,24 +211,271 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <h3 id="redis复制，sentinel的搭建原理以及redis集群搭建"><a href="#redis复制，sentinel的搭建原理以及redis集群搭建" class="headerlink" title="redis复制，sentinel的搭建原理以及redis集群搭建"></a>redis复制，sentinel的搭建原理以及redis集群搭建</h3><h4 id="redis复制相关"><a href="#redis复制相关" class="headerlink" title="redis复制相关"></a>redis复制相关</h4><h5 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h5><p>复制的配置很简单，就一个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof &lt;主数据库IP&gt; &lt;端口&gt;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
+<p>可以添加在配置文件里，也可以在命令行中执行。如主数据库IP是192.168.200.25 端口是6379：(配置多台从数据库的方法也一样)</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/06/22/redis-cluster/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/06/30/hello-world/" data-id="cjy8olvrk0000gwnwj1ak337e" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/06/22/redis-cluster/" data-id="cjy8or7ju000xiwnw9eu2j28f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-b-tree" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/30/b-tree/" class="article-date">
+  <time datetime="2019-05-30T13:34:56.000Z" itemprop="datePublished">2019-05-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/30/b-tree/">b+tree</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>题主应该知道B-树和B+树最重要的一个区别就是B+树只有叶节点存放数据，其余节点用来索引，而B-树是每个索引节点都会有Data域。<br>这就决定了B+树更适合用来存储外部数据，也就是所谓的磁盘数据。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/30/b-tree/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/05/30/b-tree/" data-id="cjy8or7hb0001iwnw4cmuytaz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-spring-afterread" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/05/10/spring-afterread/" class="article-date">
+  <time datetime="2019-05-10T06:09:50.000Z" itemprop="datePublished">2019-05-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/05/10/spring-afterread/">spring_afterread</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>花了10多天把spring源码分析的关于ioc部分看了两遍，第一遍看的时候，还是有些看的云里雾里的，不知道有些地方这么处理的作用和为什么要这么处理。看完一遍之后，去网上找了些demo来拓展spring，然后又下载了spring源码导入到idea，然后边看源码分析边对比，才算是弄懂了一些。当然还是有很多地方没弄懂，有待后续继续阅读。这里先写一些读后收获。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/05/10/spring-afterread/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/05/10/spring-afterread/" data-id="cjy8or7k80011iwnw6l18tpdk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-zookeeperlock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/18/zookeeperlock/" class="article-date">
+  <time datetime="2019-04-18T08:25:44.000Z" itemprop="datePublished">2019-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/18/zookeeperlock/">zookeeperlock</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现分布式锁目前有三种流行方案，分别为基于数据库、Redis、Zookeeper的方案，其中前两种方案网络上有很多资料可以参考，本文不做展开。我们来看下使用Zookeeper如何实现分布式锁。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/04/18/zookeeperlock/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/18/zookeeperlock/" data-id="cjy8or7j1000oiwnw746mhhhm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-java序列化" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/16/java序列化/" class="article-date">
+  <time datetime="2019-04-16T03:55:02.000Z" itemprop="datePublished">2019-04-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/16/java序列化/">java序列化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>文章结构<br>本文将逐一的介绍几个情境，顺序如下面的列表。</p>
+<ul>
+<li>序列化 ID 的问题</li>
+<li>静态变量序列化</li>
+<li>父类的序列化与 Transient 关键字</li>
+<li>对敏感字段加密</li>
+<li>序列化存储规则<br>列表的每一部分讲述了一个单独的情境，读者可以分别查看。
+        
+          <p class="article-more-link">
+            <a href="/2019/04/16/java序列化/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/16/java序列化/" data-id="cjy8or7jr000viwnw0bv2syct" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-reentrantlock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/07/reentrantlock/" class="article-date">
+  <time datetime="2019-04-07T03:37:39.000Z" itemprop="datePublished">2019-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/07/reentrantlock/">reentrantlock</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="深入理解ReentrantLock"><a href="#深入理解ReentrantLock" class="headerlink" title="深入理解ReentrantLock"></a>深入理解ReentrantLock</h3><p>在Java中通常实现锁有两种方式，一种是synchronized关键字，另一种是Lock。二者其实并没有什么必然联系，但是各有各的特点，在使用中可以进行取舍的使用。首先我们先对比下两者。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/04/07/reentrantlock/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/07/reentrantlock/" data-id="cjy8or7jv000yiwnwq6vnssa5" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-concurrentcache" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/04/concurrentcache/" class="article-date">
+  <time datetime="2019-04-04T13:05:58.000Z" itemprop="datePublished">2019-04-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/04/concurrentcache/">concurrentcache</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="构建高效且可伸缩的结果缓存"><a href="#构建高效且可伸缩的结果缓存" class="headerlink" title="构建高效且可伸缩的结果缓存"></a>构建高效且可伸缩的结果缓存</h3><p>几乎所有的服务器应用程序都会使用某种形式的缓存。重复使用之前计算好的结果能降低延迟，提高吞吐量，但是却需要消耗更多的内存。<br>像重复发明轮子一样，缓存看上去都非常简单。然而简单的缓存可能将性能瓶颈变换成可伸缩性瓶颈，即使缓存是用于提升单线程的性能的。<br>下面从简单的hashmap来开始，然后分析并发缺陷并一步步完善它。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/04/04/concurrentcache/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/04/concurrentcache/" data-id="cjy8or7gz0000iwnwr6s54zyf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -196,6 +486,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -227,7 +522,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
     </div>
   </div>
 
@@ -244,11 +539,19 @@
           </li>
         
           <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
             <a href="/2019/07/16/lock/">lock</a>
           </li>
         
           <li>
-            <a href="/2019/06/30/hello-world/">Hello World</a>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
           </li>
         
       </ul>

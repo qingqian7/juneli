@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>redis-cluster | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="redis复制，sentinel的搭建原理以及redis集群搭建redis复制相关搭建复制的配置很简单，就一个参数 1slaveof &amp;lt;主数据库IP&amp;gt; &amp;lt;端口&amp;gt;  可以添加在配置文件里，也可以在命令行中执行。如主数据库IP是192.168.200.25 端口是6379：(配置多台从数据库的方法也一样)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis-cluster">
+<meta property="og:url" content="http://yoursite.com/2019/06/22/redis-cluster/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="redis复制，sentinel的搭建原理以及redis集群搭建redis复制相关搭建复制的配置很简单，就一个参数 1slaveof &amp;lt;主数据库IP&amp;gt; &amp;lt;端口&amp;gt;  可以添加在配置文件里，也可以在命令行中执行。如主数据库IP是192.168.200.25 端口是6379：(配置多台从数据库的方法也一样)">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/1.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/2.jpg?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/3.png?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/4.jpg?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/5.jpg?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/6.jpg?raw=true">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/redis/7.png?raw=true">
+<meta property="og:updated_time" content="2019-07-18T13:02:49.004Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis-cluster">
+<meta name="twitter:description" content="redis复制，sentinel的搭建原理以及redis集群搭建redis复制相关搭建复制的配置很简单，就一个参数 1slaveof &amp;lt;主数据库IP&amp;gt; &amp;lt;端口&amp;gt;  可以添加在配置文件里，也可以在命令行中执行。如主数据库IP是192.168.200.25 端口是6379：(配置多台从数据库的方法也一样)">
+<meta name="twitter:image" content="https://github.com/qingqian7/images/blob/master/redis/1.png?raw=true">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-redis-cluster" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/22/redis-cluster/" class="article-date">
+  <time datetime="2019-06-22T08:00:14.000Z" itemprop="datePublished">2019-06-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      redis-cluster
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="redis复制，sentinel的搭建原理以及redis集群搭建"><a href="#redis复制，sentinel的搭建原理以及redis集群搭建" class="headerlink" title="redis复制，sentinel的搭建原理以及redis集群搭建"></a>redis复制，sentinel的搭建原理以及redis集群搭建</h3><h4 id="redis复制相关"><a href="#redis复制相关" class="headerlink" title="redis复制相关"></a>redis复制相关</h4><h5 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h5><p>复制的配置很简单，就一个参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof &lt;主数据库IP&gt; &lt;端口&gt;</span><br></pre></td></tr></table></figure>
+
+<p>可以添加在配置文件里，也可以在命令行中执行。如主数据库IP是192.168.200.25 端口是6379：(配置多台从数据库的方法也一样)</p>
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slaveof 192.168.200.25 6379</span><br></pre></td></tr></table></figure>
+
+<p>注意：通过命令行进行的复制，在主从断开或则主从重启之后复制信息会丢失，即不能保证持久复制，需要再次执行slaveof。但是在配置文件里写死slaveof不会有该问题。默认情况下从库是只读的，不能进行修改，需要修改需要设置配置文件中的slave-read-only为no。在命令行里执行slaveof no one可以让一个从库变成主库。</p>
+<h4 id="原理（执行步骤）"><a href="#原理（执行步骤）" class="headerlink" title="原理（执行步骤）"></a>原理（执行步骤）</h4><p>①从数据库向主数据库发送sync命令。</p>
+<p>②主数据库接收sync命令后，执行BGSAVE命令（保存快照），创建一个RDB文件，在创建RDB文件期间的命令将保存在缓冲区中。</p>
+<p>③当主数据库执行完BGSAVE时，会向从数据库发送RDB文件，而从数据库会接收并载入该文件。</p>
+<p>④主数据库将缓冲区的所有写命令发给从服务器执行。</p>
+<p>⑤以上处理完之后，之后主数据库每执行一个写命令，都会将被执行的写命令发送给从数据库。<br><img src="https://github.com/qingqian7/images/blob/master/redis/1.png?raw=true" alt="image1"></p>
+<p>Redis 的 Sentinel 系统用于管理多个 Redis 服务器（instance）， 该系统执行以下三个任务：</p>
+<p>监控（Monitoring）： Sentinel 会不断地检查你的主服务器和从服务器是否运作正常。<br>提醒（Notification）： 当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。<br>自动故障迁移（Automatic failover）： 当一个主服务器不能正常工作时， Sentinel 会开始一次自动故障迁移操作， 它会将失效主服务器的其中一个从服务器升级为新的主服务器， 并让失效主服务器的其他从服务器改为复制新的主服务器； 当客户端试图连接失效的主服务器时， 集群也会向客户端返回新主服务器的地址， 使得集群可以使用新主服务器代替失效服务器。<br>Redis Sentinel 是一个分布式系统， 你可以在一个架构中运行多个 Sentinel 进程（progress）， 这些进程使用流言协议（gossip protocols)来接收关于主服务器是否下线的信息， 并使用投票协议（agreement protocols）来决定是否执行自动故障迁移， 以及选择哪个从服务器作为新的主服务器。</p>
+<p>虽然 Redis Sentinel 释出为一个单独的可执行文件 redis-sentinel ， 但实际上它只是一个运行在特殊模式下的 Redis 服务器， 你可以在启动一个普通 Redis 服务器时通过给定 –sentinel 选项来启动 Redis Sentinel 。</p>
+<h5 id="启动sentinel"><a href="#启动sentinel" class="headerlink" title="启动sentinel"></a>启动sentinel</h5><p>对于 redis-sentinel 程序， 你可以用以下命令来启动 Sentinel 系统：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-sentinel /path/to/sentinel.conf</span><br><span class="line">```` </span><br><span class="line">对于 redis-server 程序， 你可以用以下命令来启动一个运行在 Sentinel 模式下的 Redis 服务器：</span><br></pre></td></tr></table></figure>
+
+<p>redis-server /path/to/sentinel.conf –sentinel</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">两种方法都可以启动一个 Sentinel 实例。</span><br><span class="line"></span><br><span class="line">启动 Sentinel 实例必须指定相应的配置文件， 系统会使用配置文件来保存 Sentinel 的当前状态， 并在 Sentinel 重启时通过载入配置文件来进行状态还原。</span><br><span class="line"></span><br><span class="line">如果启动 Sentinel 时没有指定相应的配置文件， 或者指定的配置文件不可写（not writable）， 那么 Sentinel 会拒绝启动。</span><br><span class="line"></span><br><span class="line">##### 配置 Sentinel</span><br><span class="line">Redis 源码中包含了一个名为 sentinel.conf 的文件， 这个文件是一个带有详细注释的 Sentinel 配置文件示例。</span><br><span class="line"></span><br><span class="line">运行一个 Sentinel 所需的最少配置如下所示：</span><br></pre></td></tr></table></figure>
+
+<p>sentinel monitor mymaster 127.0.0.1 6379 2<br>sentinel down-after-milliseconds mymaster 60000<br>sentinel failover-timeout mymaster 180000<br>sentinel parallel-syncs mymaster 1</p>
+<p>sentinel monitor resque 192.168.1.3 6380 4<br>sentinel down-after-milliseconds resque 10000<br>sentinel failover-timeout resque 180000<br>sentinel parallel-syncs resque 5</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">第一行配置指示 Sentinel 去监视一个名为 mymaster 的主服务器， 这个主服务器的 IP 地址为 127.0.0.1 ， 端口号为 6379 ， 而将这个主服务器判断为失效至少需要 2 个 Sentinel 同意 （只要同意 Sentinel 的数量不达标，自动故障迁移就不会执行）。</span><br><span class="line"></span><br><span class="line">不过要注意， 无论你设置要多少个 Sentinel 同意才能判断一个服务器失效， 一个 Sentinel 都需要获得系统中多数（majority） Sentinel 的支持， 才能发起一次自动故障迁移， 并预留一个给定的配置纪元 （configuration Epoch ，一个配置纪元就是一个新主服务器配置的版本号）。</span><br><span class="line"></span><br><span class="line">换句话说， 在只有少数（minority） Sentinel 进程正常运作的情况下， Sentinel 是不能执行自动故障迁移的。</span><br><span class="line"></span><br><span class="line">其他选项的基本格式如下：</span><br></pre></td></tr></table></figure>
+
+<p>sentinel &lt;选项的名字&gt; &lt;主服务器的名字&gt; &lt;选项的值&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line">各个选项的功能如下：</span><br><span class="line"></span><br><span class="line">down-after-milliseconds 选项指定了 Sentinel 认为服务器已经断线所需的毫秒数。</span><br><span class="line"></span><br><span class="line">如果服务器在给定的毫秒数之内， 没有返回 Sentinel 发送的 PING 命令的回复， 或者返回一个错误， 那么 Sentinel 将这个服务器标记为主观下线（subjectively down，简称 SDOWN ）。</span><br><span class="line"></span><br><span class="line">不过只有一个 Sentinel 将服务器标记为主观下线并不一定会引起服务器的自动故障迁移： 只有在足够数量的 Sentinel 都将一个服务器标记为主观下线之后， 服务器才会被标记为客观下线（objectively down， 简称 ODOWN ）， 这时自动故障迁移才会执行。</span><br><span class="line"></span><br><span class="line">将服务器标记为客观下线所需的 Sentinel 数量由对主服务器的配置决定。</span><br><span class="line"></span><br><span class="line">parallel-syncs 选项指定了在执行故障转移时， 最多可以有多少个从服务器同时对新的主服务器进行同步， 这个数字越小， 完成故障转移所需的时间就越长。</span><br><span class="line"></span><br><span class="line">如果从服务器被设置为允许使用过期数据集（参见对 redis.conf 文件中对 slave-serve-stale-data 选项的说明）， 那么你可能不希望所有从服务器都在同一时间向新的主服务器发送同步请求， 因为尽管复制过程的绝大部分步骤都不会阻塞从服务器， 但从服务器在载入主服务器发来的 RDB 文件时， 仍然会造成从服务器在一段时间内不能处理命令请求： 如果全部从服务器一起对新的主服务器进行同步， 那么就可能会造成所有从服务器在短时间内全部不可用的情况出现。</span><br><span class="line"></span><br><span class="line">你可以通过将这个值设为 1 来保证每次只有一个从服务器处于不能处理命令请求的状态。</span><br><span class="line"></span><br><span class="line">本文档剩余的内容将对 Sentinel 系统的其他选项进行介绍， 示例配置文件 sentinel.conf 也对相关的选项进行了完整的注释。</span><br><span class="line">##### 主观下线和客观下线</span><br><span class="line">前面说过， Redis 的 Sentinel 中关于下线（down）有两个不同的概念：</span><br><span class="line"></span><br><span class="line">主观下线（Subjectively Down， 简称 SDOWN）指的是单个 Sentinel 实例对服务器做出的下线判断。</span><br><span class="line">客观下线（Objectively Down， 简称 ODOWN）指的是多个 Sentinel 实例在对同一个服务器做出 SDOWN 判断， 并且通过SENTINEL is-master-down-by-addr 命令互相交流之后， 得出的服务器下线判断。 （一个 Sentinel 可以通过向另一个 Sentinel 发送 SENTINEL is-master-down-by-addr 命令来询问对方是否认为给定的服务器已下线。）</span><br><span class="line">如果一个服务器没有在 master-down-after-milliseconds 选项所指定的时间内， 对向它发送 PING 命令的 Sentinel 返回一个有效回复（valid reply）， 那么 Sentinel 就会将这个服务器标记为主观下线。</span><br><span class="line"></span><br><span class="line">服务器对 PING 命令的有效回复可以是以下三种回复的其中一种：</span><br><span class="line"></span><br><span class="line">返回 +PONG 。</span><br><span class="line">返回 -LOADING 错误。</span><br><span class="line">返回 -MASTERDOWN 错误。</span><br><span class="line">如果服务器返回除以上三种回复之外的其他回复， 又或者在指定时间内没有回复 PING 命令， 那么 Sentinel 认为服务器返回的回复无效（non-valid）。</span><br><span class="line"></span><br><span class="line">注意， 一个服务器必须在 master-down-after-milliseconds 毫秒内， 一直返回无效回复才会被 Sentinel 标记为主观下线。</span><br><span class="line"></span><br><span class="line">举个例子， 如果 master-down-after-milliseconds 选项的值为 30000 毫秒（30 秒）， 那么只要服务器能在每 29 秒之内返回至少一次有效回复， 这个服务器就仍然会被认为是处于正常状态的。</span><br><span class="line"></span><br><span class="line">从主观下线状态切换到客观下线状态并没有使用严格的法定人数算法（strong quorum algorithm）， 而是使用了流言协议： 如果 Sentinel 在给定的时间范围内， 从其他 Sentinel 那里接收到了足够数量的主服务器下线报告， 那么 Sentinel 就会将主服务器的状态从主观下线改变为客观下线。 如果之后其他 Sentinel 不再报告主服务器已下线， 那么客观下线状态就会被移除。</span><br><span class="line"></span><br><span class="line">客观下线条件只适用于主服务器： 对于任何其他类型的 Redis 实例， Sentinel 在将它们判断为下线前不需要进行协商， 所以从服务器或者其他 Sentinel 永远不会达到客观下线条件。</span><br><span class="line"></span><br><span class="line">只要一个 Sentinel 发现某个主服务器进入了客观下线状态， 这个 Sentinel 就可能会被其他 Sentinel 推选出， 并对失效的主服务器执行自动故障迁移操作。</span><br><span class="line"></span><br><span class="line">##### 每个sentinel都要定期执行的任务</span><br><span class="line">每个 Sentinel 以每秒钟一次的频率向它所知的主服务器、从服务器以及其他 Sentinel 实例发送一个 PING 命令。</span><br><span class="line">如果一个实例（instance）距离最后一次有效回复 PING 命令的时间超过 down-after-milliseconds 选项所指定的值， 那么这个实例会被 Sentinel 标记为主观下线。 一个有效回复可以是： +PONG 、 -LOADING 或者 -MASTERDOWN 。</span><br><span class="line">如果一个主服务器被标记为主观下线， 那么正在监视这个主服务器的所有 Sentinel 要以每秒一次的频率确认主服务器的确进入了主观下线状态。</span><br><span class="line">如果一个主服务器被标记为主观下线， 并且有足够数量的 Sentinel （至少要达到配置文件指定的数量）在指定的时间范围内同意这一判断， 那么这个主服务器被标记为客观下线。</span><br><span class="line">在一般情况下， 每个 Sentinel 会以每 10 秒一次的频率向它已知的所有主服务器和从服务器发送 INFO 命令。 当一个主服务器被 Sentinel 标记为客观下线时， Sentinel 向下线主服务器的所有从服务器发送 INFO 命令的频率会从 10 秒一次改为每秒一次。</span><br><span class="line">当没有足够数量的 Sentinel 同意主服务器已经下线， 主服务器的客观下线状态就会被移除。 当主服务器重新向 Sentinel 的PING 命令返回有效回复时， 主服务器的主管下线状态就会被移除。</span><br><span class="line"></span><br><span class="line">##### 自动发现 Sentinel 和从服务器</span><br><span class="line">一个 Sentinel 可以与其他多个 Sentinel 进行连接， 各个 Sentinel 之间可以互相检查对方的可用性， 并进行信息交换。</span><br><span class="line"></span><br><span class="line">你无须为运行的每个 Sentinel 分别设置其他 Sentinel 的地址， 因为 Sentinel 可以通过发布与订阅功能来自动发现正在监视相同主服务器的其他 Sentinel ， 这一功能是通过向频道 __sentinel__:hello 发送信息来实现的。</span><br><span class="line"></span><br><span class="line">与此类似， 你也不必手动列出主服务器属下的所有从服务器， 因为 Sentinel 可以通过询问主服务器来获得所有从服务器的信息。</span><br><span class="line"></span><br><span class="line">每个 Sentinel 会以每两秒一次的频率， 通过发布与订阅功能， 向被它监视的所有主服务器和从服务器的 __sentinel__:hello 频道发送一条信息， 信息中包含了 Sentinel 的 IP 地址、端口号和运行 ID （runid）。</span><br><span class="line">每个 Sentinel 都订阅了被它监视的所有主服务器和从服务器的 __sentinel__:hello 频道， 查找之前未出现过的 sentinel （looking for unknown sentinels）。 当一个 Sentinel 发现一个新的 Sentinel 时， 它会将新的 Sentinel 添加到一个列表中， 这个列表保存了 Sentinel 已知的， 监视同一个主服务器的所有其他 Sentinel 。</span><br><span class="line">Sentinel 发送的信息中还包括完整的主服务器当前配置（configuration）。 如果一个 Sentinel 包含的主服务器配置比另一个 Sentinel 发送的配置要旧， 那么这个 Sentinel 会立即升级到新配置上。</span><br><span class="line">在将一个新 Sentinel 添加到监视主服务器的列表上面之前， Sentinel 会先检查列表中是否已经包含了和要添加的 Sentinel 拥有相同运行 ID 或者相同地址（包括 IP 地址和端口号）的 Sentinel ， 如果是的话， Sentinel 会先移除列表中已有的那些拥有相同运行 ID 或者相同地址的 Sentinel ， 然后再添加新 Sentinel 。</span><br><span class="line"></span><br><span class="line">##### 原理</span><br><span class="line"></span><br><span class="line">①sentinel集群通过给定的配置文件发现master，启动时会监控master。通过向master发送info信息获得该服务器下面的所有从服务器。</span><br><span class="line">②sentinel集群通过命令连接向被监视的主从服务器发送hello信息(每秒一次)，该信息包括sentinel本身的ip、端口、id等内容，以此来向其他sentinel宣告自己的存在。</span><br><span class="line">③sentinel集群通过订阅连接接收其他sentinel发送的hello信息，以此来发现监视同一个主服务器的其他sentinel；集群之间会互相创建命令连接用于通信，因为已经有主从服务器作为发送和接收hello信息的中介，sentinel之间不会创建订阅连接。</span><br><span class="line">④sentinel集群使用ping命令来检测实例的状态，如果在指定的时间内（down-after-milliseconds）没有回复或则返回错误的回复，那么该实例被判为下线。 </span><br><span class="line">⑤当failover主备切换被触发后，failover并不会马上进行，还需要sentinel中的大多数sentinel授权后才可以进行failover，即进行failover的sentinel会去获得指定quorum个的sentinel的授权，成功后进入ODOWN状态。如在5个sentinel中配置了2个quorum，等到2个sentinel认为master死了就执行failover。</span><br><span class="line">⑥sentinel向选为master的slave发送SLAVEOF NO ONE命令，选择slave的条件是sentinel首先会根据slaves的优先级来进行排序，优先级越小排名越靠前。如果优先级相同，则查看复制的下标，哪个从master接收的复制数据多，哪个就靠前。如果优先级和下标都相同，就选择进程ID较小的。</span><br><span class="line">⑦sentinel被授权后，它将会获得宕掉的master的一份最新配置版本号(config-epoch)，当failover执行结束以后，这个版本号将会被用于最新的配置，通过广播形式通知其它sentinel，其它的sentinel则更新对应master的配置。</span><br><span class="line"></span><br><span class="line">①到③是自动发现机制:</span><br><span class="line"></span><br><span class="line">以10秒一次的频率，向被监视的master发送info命令，根据回复获取master当前信息。</span><br><span class="line">以1秒一次的频率，向所有redis服务器、包含sentinel在内发送PING命令，通过回复判断服务器是否在线。</span><br><span class="line">以2秒一次的频率，通过向所有被监视的master，slave服务器发送当前sentinel，master信息的消息。</span><br><span class="line">④是检测机制，⑤和⑥是failover机制，⑦是更新配置机制。</span><br><span class="line"></span><br><span class="line">注意：因为redis采用的是异步复制，没有办法避免数据的丢失。但可以通过以下配置来使得数据不会丢失：min-slaves-to-write 1 、 min-slaves-max-lag 10。一个redis无论是master还是slave，都必须在配置中指定一个slave优先级。要注意到master也是有可能通过failover变成slave的。如果一个redis的slave优先级配置为0，那么它将永远不会被选为master，但是它依然会从master哪里复制数据。</span><br><span class="line"></span><br><span class="line">##### Sentinel API</span><br><span class="line">在默认情况下， Sentinel 使用 TCP 端口 26379 （普通 Redis 服务器使用的是 6379 ）。</span><br><span class="line"></span><br><span class="line">Sentinel 接受 Redis 协议格式的命令请求， 所以你可以使用 redis-cli 或者任何其他 Redis 客户端来与 Sentinel 进行通讯。</span><br><span class="line"></span><br><span class="line">有两种方式可以和 Sentinel 进行通讯：</span><br><span class="line"></span><br><span class="line">第一种方法是通过直接发送命令来查询被监视 Redis 服务器的当前状态， 以及 Sentinel 所知道的关于其他 Sentinel 的信息， 诸如此类。</span><br><span class="line">另一种方法是使用发布与订阅功能， 通过接收 Sentinel 发送的通知： 当执行故障转移操作， 或者某个被监视的服务器被判断为主观下线或者客观下线时， Sentinel 就会发送相应的信息。</span><br><span class="line">##### Sentinel 命令</span><br><span class="line">以下列出的是 Sentinel 接受的命令：</span><br><span class="line"></span><br><span class="line">PING ：返回 PONG 。</span><br><span class="line">SENTINEL masters ：列出所有被监视的主服务器，以及这些主服务器的当前状态。</span><br><span class="line">SENTINEL slaves &lt;master name&gt; ：列出给定主服务器的所有从服务器，以及这些从服务器的当前状态。</span><br><span class="line">SENTINEL get-master-addr-by-name &lt;master name&gt; ： 返回给定名字的主服务器的 IP 地址和端口号。 如果这个主服务器正在执行故障转移操作， 或者针对这个主服务器的故障转移操作已经完成， 那么这个命令返回新的主服务器的 IP 地址和端口号。</span><br><span class="line">SENTINEL reset &lt;pattern&gt; ： 重置所有名字和给定模式 pattern 相匹配的主服务器。 pattern 参数是一个 Glob 风格的模式。 重置操作清除主服务器目前的所有状态， 包括正在执行中的故障转移， 并移除目前已经发现和关联的， 主服务器的所有从服务器和 Sentinel 。</span><br><span class="line">SENTINEL failover &lt;master name&gt; ： 当主服务器失效时， 在不询问其他 Sentinel 意见的情况下， 强制开始一次自动故障迁移 （不过发起故障转移的 Sentinel 会向其他 Sentinel 发送一个新的配置，其他 Sentinel 会根据这个配置进行相应的更新）。</span><br><span class="line">发布与订阅信息</span><br><span class="line">客户端可以将 Sentinel 看作是一个只提供了订阅功能的 Redis 服务器： 你不可以使用 PUBLISH 命令向这个服务器发送信息， 但你可以用 SUBSCRIBE 命令或者 PSUBSCRIBE 命令， 通过订阅给定的频道来获取相应的事件提醒。</span><br><span class="line"></span><br><span class="line">一个频道能够接收和这个频道的名字相同的事件。 比如说， 名为 +sdown 的频道就可以接收所有实例进入主观下线（SDOWN）状态的事件。</span><br><span class="line"></span><br><span class="line">通过执行 PSUBSCRIBE * 命令可以接收所有事件信息。</span><br><span class="line"></span><br><span class="line">以下列出的是客户端可以通过订阅来获得的频道和信息的格式： 第一个英文单词是频道/事件的名字， 其余的是数据的格式。</span><br><span class="line"></span><br><span class="line">注意， 当格式中包含 instance details 字样时， 表示频道所返回的信息中包含了以下用于识别目标实例的内容：</span><br></pre></td></tr></table></figure>
+
+<p><instance-type> <name> <ip> <port> @ <master-name> <master-ip> <master-port></master-port></master-ip></master-name></port></ip></name></instance-type></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">@ 字符之后的内容用于指定主服务器， 这些内容是可选的， 它们仅在 @ 字符之前的内容指定的实例不是主服务器时使用。</span><br><span class="line"></span><br><span class="line">+reset-master &lt;instance details&gt; ：主服务器已被重置。</span><br><span class="line">+slave &lt;instance details&gt; ：一个新的从服务器已经被 Sentinel 识别并关联。</span><br><span class="line">+failover-state-reconf-slaves &lt;instance details&gt; ：故障转移状态切换到了 reconf-slaves 状态。</span><br><span class="line">+failover-detected &lt;instance details&gt; ：另一个 Sentinel 开始了一次故障转移操作，或者一个从服务器转换成了主服务器。</span><br><span class="line">+slave-reconf-sent &lt;instance details&gt; ：领头（leader）的 Sentinel 向实例发送了 SLAVEOF 命令，为实例设置新的主服务器。</span><br><span class="line">+slave-reconf-inprog &lt;instance details&gt; ：实例正在将自己设置为指定主服务器的从服务器，但相应的同步过程仍未完成。</span><br><span class="line">+slave-reconf-done &lt;instance details&gt; ：从服务器已经成功完成对新主服务器的同步。</span><br><span class="line">-dup-sentinel &lt;instance details&gt; ：对给定主服务器进行监视的一个或多个 Sentinel 已经因为重复出现而被移除 —— 当 Sentinel 实例重启的时候，就会出现这种情况。</span><br><span class="line">+sentinel &lt;instance details&gt; ：一个监视给定主服务器的新 Sentinel 已经被识别并添加。</span><br><span class="line">+sdown &lt;instance details&gt; ：给定的实例现在处于主观下线状态。</span><br><span class="line">-sdown &lt;instance details&gt; ：给定的实例已经不再处于主观下线状态。</span><br><span class="line">+odown &lt;instance details&gt; ：给定的实例现在处于客观下线状态。</span><br><span class="line">-odown &lt;instance details&gt; ：给定的实例已经不再处于客观下线状态。</span><br><span class="line">+new-epoch &lt;instance details&gt; ：当前的纪元（epoch）已经被更新。</span><br><span class="line">+try-failover &lt;instance details&gt; ：一个新的故障迁移操作正在执行中，等待被大多数 Sentinel 选中（waiting to be elected by the majority）。</span><br><span class="line">+elected-leader &lt;instance details&gt; ：赢得指定纪元的选举，可以进行故障迁移操作了。</span><br><span class="line">+failover-state-select-slave &lt;instance details&gt; ：故障转移操作现在处于 select-slave 状态 —— Sentinel 正在寻找可以升级为主服务器的从服务器。</span><br><span class="line">no-good-slave &lt;instance details&gt; ：Sentinel 操作未能找到适合进行升级的从服务器。Sentinel 会在一段时间之后再次尝试寻找合适的从服务器来进行升级，又或者直接放弃执行故障转移操作。</span><br><span class="line">selected-slave &lt;instance details&gt; ：Sentinel 顺利找到适合进行升级的从服务器。</span><br><span class="line">failover-state-send-slaveof-noone &lt;instance details&gt; ：Sentinel 正在将指定的从服务器升级为主服务器，等待升级功能完成。</span><br><span class="line">failover-end-for-timeout &lt;instance details&gt; ：故障转移因为超时而中止，不过最终所有从服务器都会开始复制新的主服务器（slaves will eventually be configured to replicate with the new master anyway）。</span><br><span class="line">failover-end &lt;instance details&gt; ：故障转移操作顺利完成。所有从服务器都开始复制新的主服务器了。</span><br><span class="line">+switch-master &lt;master name&gt; &lt;oldip&gt; &lt;oldport&gt; &lt;newip&gt; &lt;newport&gt; ：配置变更，主服务器的 IP 和地址已经改变。 这是绝大多数外部用户都关心的信息。</span><br><span class="line">+tilt ：进入 tilt 模式。</span><br><span class="line">-tilt ：退出 tilt 模式。</span><br><span class="line"></span><br><span class="line">##### 故障转移</span><br><span class="line">一次故障转移操作由以下步骤组成：</span><br><span class="line"></span><br><span class="line">发现主服务器已经进入客观下线状态。</span><br><span class="line">对我们的当前纪元进行自增（详情请参考 Raft leader election ）， 并尝试在这个纪元中当选。</span><br><span class="line">如果当选失败， 那么在设定的故障迁移超时时间的两倍之后， 重新尝试当选。 如果当选成功， 那么执行以下步骤。</span><br><span class="line">选出一个从服务器，并将它升级为主服务器。</span><br><span class="line">向被选中的从服务器发送 SLAVEOF NO ONE 命令，让它转变为主服务器。</span><br><span class="line">通过发布与订阅功能， 将更新后的配置传播给所有其他 Sentinel ， 其他 Sentinel 对它们自己的配置进行更新。</span><br><span class="line">向已下线主服务器的从服务器发送 SLAVEOF 命令， 让它们去复制新的主服务器。</span><br><span class="line">当所有从服务器都已经开始复制新的主服务器时， 领头 Sentinel 终止这次故障迁移操作。</span><br></pre></td></tr></table></figure>
+
+<p>每当一个 Redis 实例被重新配置（reconfigured） —— 无论是被设置成主服务器、从服务器、又或者被设置成其他主服务器的从服务器 —— Sentinel 都会向被重新配置的实例发送一个 CONFIG REWRITE 命令， 从而确保这些配置会持久化在硬盘里。<br>````<br>Sentinel 使用以下规则来选择新的主服务器：</p>
+<p>在失效主服务器属下的从服务器当中， 那些被标记为主观下线、已断线、或者最后一次回复 PING 命令的时间大于五秒钟的从服务器都会被淘汰。<br>在失效主服务器属下的从服务器当中， 那些与失效主服务器连接断开的时长超过 down-after 选项指定的时长十倍的从服务器都会被淘汰。<br>在经历了以上两轮淘汰之后剩下来的从服务器中， 我们选出复制偏移量（replication offset）最大的那个从服务器作为新的主服务器； 如果复制偏移量不可用， 或者从服务器的复制偏移量相同， 那么带有最小运行 ID 的那个从服务器成为新的主服务器。</p>
+<h5 id="Sentinel-自动故障迁移的一致性特质"><a href="#Sentinel-自动故障迁移的一致性特质" class="headerlink" title="Sentinel 自动故障迁移的一致性特质"></a>Sentinel 自动故障迁移的一致性特质</h5><p>Sentinel 自动故障迁移使用 Raft 算法来选举领头（leader） Sentinel ， 从而确保在一个给定的纪元（epoch）里， 只有一个领头产生。</p>
+<p>这表示在同一个纪元中， 不会有两个 Sentinel 同时被选中为领头， 并且各个 Sentinel 在同一个纪元中只会对一个领头进行投票。</p>
+<p>更高的配置纪元总是优于较低的纪元， 因此每个 Sentinel 都会主动使用更新的纪元来代替自己的配置。</p>
+<p>简单来说， 我们可以将 Sentinel 配置看作是一个带有版本号的状态。 一个状态会以最后写入者胜出（last-write-wins）的方式（也即是，最新的配置总是胜出）传播至所有其他 Sentinel 。</p>
+<p>举个例子， 当出现网络分割（network partitions）时， 一个 Sentinel 可能会包含了较旧的配置， 而当这个 Sentinel 接到其他 Sentinel 发来的版本更新的配置时， Sentinel 就会对自己的配置进行更新。</p>
+<p>如果要在网络分割出现的情况下仍然保持一致性， 那么应该使用 min-slaves-to-write 选项， 让主服务器在连接的从实例少于给定数量时停止执行写操作， 与此同时， 应该在每个运行 Redis 主服务器或从服务器的机器上运行 Redis Sentinel 进程。</p>
+<h5 id="Sentinel-状态的持久化"><a href="#Sentinel-状态的持久化" class="headerlink" title="Sentinel 状态的持久化"></a>Sentinel 状态的持久化</h5><p>Sentinel 的状态会被持久化在 Sentinel 配置文件里面。</p>
+<p>每当 Sentinel 接收到一个新的配置， 或者当领头 Sentinel 为主服务器创建一个新的配置时， 这个配置会与配置纪元一起被保存到磁盘里面。</p>
+<p>这意味着停止和重启 Sentinel 进程都是安全的。</p>
+<h5 id="Sentinel-在非故障迁移的情况下对实例进行重新配置"><a href="#Sentinel-在非故障迁移的情况下对实例进行重新配置" class="headerlink" title="Sentinel 在非故障迁移的情况下对实例进行重新配置"></a>Sentinel 在非故障迁移的情况下对实例进行重新配置</h5><p>即使没有自动故障迁移操作在进行， Sentinel 总会尝试将当前的配置设置到被监视的实例上面。 特别是：</p>
+<p>根据当前的配置， 如果一个从服务器被宣告为主服务器， 那么它会代替原有的主服务器， 成为新的主服务器， 并且成为原有主服务器的所有从服务器的复制对象。<br>那些连接了错误主服务器的从服务器会被重新配置， 使得这些从服务器会去复制正确的主服务器。<br>不过， 在以上这些条件满足之后， Sentinel 在对实例进行重新配置之前仍然会等待一段足够长的时间， 确保可以接收到其他 Sentinel 发来的配置更新， 从而避免自身因为保存了过期的配置而对实例进行了不必要的重新配置。</p>
+<h5 id="TILT-模式"><a href="#TILT-模式" class="headerlink" title="TILT 模式"></a>TILT 模式</h5><p>Redis Sentinel 严重依赖计算机的时间功能： 比如说， 为了判断一个实例是否可用， Sentinel 会记录这个实例最后一次相应 PING命令的时间， 并将这个时间和当前时间进行对比， 从而知道这个实例有多长时间没有和 Sentinel 进行任何成功通讯。</p>
+<p>不过， 一旦计算机的时间功能出现故障， 或者计算机非常忙碌， 又或者进程因为某些原因而被阻塞时， Sentinel 可能也会跟着出现故障。</p>
+<p>TILT 模式是一种特殊的保护模式： 当 Sentinel 发现系统有些不对劲时， Sentinel 就会进入 TILT 模式。</p>
+<p>因为 Sentinel 的时间中断器默认每秒执行 10 次， 所以我们预期时间中断器的两次执行之间的间隔为 100 毫秒左右。 Sentinel 的做法是， 记录上一次时间中断器执行时的时间， 并将它和这一次时间中断器执行的时间进行对比：</p>
+<p>如果两次调用时间之间的差距为负值， 或者非常大（超过 2 秒钟）， 那么 Sentinel 进入 TILT 模式。<br>如果 Sentinel 已经进入 TILT 模式， 那么 Sentinel 延迟退出 TILT 模式的时间。<br>当 Sentinel 进入 TILT 模式时， 它仍然会继续监视所有目标， 但是：</p>
+<p>它不再执行任何操作，比如故障转移。<br>当有实例向这个 Sentinel 发送 SENTINEL is-master-down-by-addr 命令时， Sentinel 返回负值： 因为这个 Sentinel 所进行的下线判断已经不再准确。<br>如果 TILT 可以正常维持 30 秒钟， 那么 Sentinel 退出 TILT 模式。</p>
+<h4 id="redis集群搭建"><a href="#redis集群搭建" class="headerlink" title="redis集群搭建"></a>redis集群搭建</h4><p>sentinel方式可以实现故障迁移，但是无法做到主服务器的写压力均衡，而集群的方式可以做到。</p>
+<h5 id="搭建方式"><a href="#搭建方式" class="headerlink" title="搭建方式"></a>搭建方式</h5><p><a href="https://blog.csdn.net/qq_42815754/article/details/82912130" target="_blank" rel="noopener">搭建教程</a></p>
+<h4 id="redis-cluster-slot"><a href="#redis-cluster-slot" class="headerlink" title="redis-cluster slot"></a>redis-cluster slot</h4><h5 id="槽-Slot"><a href="#槽-Slot" class="headerlink" title="槽 Slot"></a>槽 Slot</h5><p>Redis集群通过分片的方式来保存数据中的键值对：集群中的数据库被分为16384个槽（slot），数据库中的每个健都属于这16384个槽的其中一个，集群中的每个节点可以处理的0个或最多16384个槽。</p>
+<p>当数据库中的16384个槽都有节点在处理时，集群处于上线状态（ok）；相反，如果数据库中有任何一个槽没有得到处理，那么集群处于下线状态（fail）。</p>
+<h5 id="槽指派"><a href="#槽指派" class="headerlink" title="槽指派"></a>槽指派</h5><p>通过向节点发送CLUSTER ADDSLOTS命令，可以将一个或多个槽指派（assign）给节点负责。当指派过程中有冲突，即将要指派的槽已经被指派了，则直接返回错误，当前指派命令不会执行。</p>
+<p>通过CLUSTER INFO命令查看当前集群的信息；<br>通过CLUSTER NODES命令查看集群中各个节点负责的槽；<br><img src="https://github.com/qingqian7/images/blob/master/redis/2.jpg?raw=true" alt="image2"></p>
+<h5 id="记录槽指派信息"><a href="#记录槽指派信息" class="headerlink" title="记录槽指派信息"></a>记录槽指派信息</h5><p>clusterNode结构的slots属性和numslot属性记录了节点负责处理哪些槽；<br>slots属性是一个二进制位数组，检索复杂度为O（1），根据索引i上的二进制位的值来判断节点是否负责处理槽i，1为处理，0为不处理；<br>numslot属性记录节点负责处理的槽的数量。</p>
+<h5 id="传播节点的槽指派信息"><a href="#传播节点的槽指派信息" class="headerlink" title="传播节点的槽指派信息"></a>传播节点的槽指派信息</h5><p>一个节点除了会将自己负责处理的槽记录在clusterNode结构的slots属性和numslots属性之外，它还会将自己的slots数组通过消息发送给集群中的其他节点，来告知其他节点自己目前负责处理哪些槽。</p>
+<p>因为集群中的每个节点都会将自己的slots数组通过消息发送给集群中的其他节点，并且每个接收到slots数组的节点都会将数组保存到相应节点的clusterNode结构里面，因此，集群中的每个节点都会知道数据库中的16384个槽分别被指派给了集群中的哪些节点。</p>
+<p>clusterState结构中也有一个slots数组，该数组记录了集群中所有16384个槽的指派信息，每个数组项都是一个指向clusterNode结构的指针。<br><img src="https://github.com/qingqian7/images/blob/master/redis/3.png?raw=true" alt="image3"></p>
+<p>clusterState.slots数组记录了集群中所有槽的指派信息，而clusterNode.slots数组只记录了clusterNode结构所代表的节点的槽指派信息，当检索时前者效率高。后者存在的必要：当程序需要将某个节点的槽指派信息发送给其他节点时可以直接使用clusterNode.slots数组信息。</p>
+<h5 id="集群中执行命令-槽指向"><a href="#集群中执行命令-槽指向" class="headerlink" title="集群中执行命令-槽指向"></a>集群中执行命令-槽指向</h5><p>在对数据库中的16384个槽都进行了指派后，集群就会进入上线状态，这是客户端就可以向集群中的节点发送数据命令了。<br><img src="https://github.com/qingqian7/images/blob/master/redis/4.jpg?raw=true" alt="image4"><br>一个集群客户端通常会与集群中的多个节点创建套接字连接，而所谓的节点转向实际上就是换一个套接字来发送命令。</p>
+<h5 id="计算键属于哪个槽"><a href="#计算键属于哪个槽" class="headerlink" title="计算键属于哪个槽"></a>计算键属于哪个槽</h5><p><img src="https://github.com/qingqian7/images/blob/master/redis/5.jpg?raw=true" alt="image5"></p>
+<p>判断槽是否由当前节点负责处理<br><img src="https://github.com/qingqian7/images/blob/master/redis/6.jpg?raw=true" alt="image6"></p>
+<p>由槽查看负责处理节点<br><img src="https://github.com/qingqian7/images/blob/master/redis/7.png?raw=true" alt="image6"><br>MOVED错误<br>当节点发现键所在的槽并非由自己负责处理的时候，节点就会向客户端返回一个MOVED错误，指引客户端转向至正在负责槽的节点</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/06/22/redis-cluster/" data-id="cjy8or7ju000xiwnw9eu2j28f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/07/16/lock/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          lock
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/05/30/b-tree/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">b+tree</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/page/3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-webflux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/27/webflux/" class="article-date">
+  <time datetime="2019-02-27T13:22:19.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/27/webflux/">webflux</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>spring webflux</p>
+<h3 id="功能与api"><a href="#功能与api" class="headerlink" title="功能与api"></a>功能与api</h3><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>Netty作为java领域首屈一指的nio框架，其以优越的性能被众多中间件所使用。但到了java的web开发领域，却很难享受到Netty的性能优势。其原因在于传统web开发基于servlet容器，许多依赖和开发框架都是基于servlet实现的，比如spring。而netty为了保持代码的简单和高效，并没有实现servlet标准，这就导致将web容器迁移到netty后许多框架和第三方库不能使用，迁移的成本过大。但spring webflux出现改变了这一现状。她在兼容原有mvc开发方式的同时，重写和实现了大量第三方库，在提升性能的同时，降低了迁移的成本。同时spring webflux适配多种web容器，即使仍然使用tomcat也是可以的。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/27/webflux/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/27/webflux/" data-id="cjy8or7ji000siwnwxwtw9jzn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-reactor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/27/reactor/" class="article-date">
+  <time datetime="2019-02-27T11:42:02.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/27/reactor/">reactor</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="使用-Reactor-进行反应式编程"><a href="#使用-Reactor-进行反应式编程" class="headerlink" title="使用 Reactor 进行反应式编程"></a>使用 Reactor 进行反应式编程</h3><p>反应式编程（Reactive Programming）这种新的编程范式越来越受到开发人员的欢迎。在 Java 社区中比较流行的是 RxJava 和 RxJava 2。本文要介绍的是另外一个新的反应式编程库 Reactor。</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/27/reactor/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/27/reactor/" data-id="cjy8or7jt000wiwnwtfuq6n35" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-shiro" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/24/shiro/" class="article-date">
+  <time datetime="2019-02-24T06:29:53.000Z" itemprop="datePublished">2019-02-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/24/shiro/">shiro</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="shiro框架"><a href="#shiro框架" class="headerlink" title="shiro框架"></a>shiro框架</h3><p>Shiro 主要分为 安全认证 和 接口授权 两个部分，其中的核心组件为 Subject、SecurityManager、Realms，公共部分 Shiro 都已经为我们封装好了，我们只需要按照一定的规则去编写响应的代码即可…</p>
+<p>Subject 即表示主体，将用户的概念理解为当前操作的主体，因为它即可以是一个通过浏览器请求的用户，也可能是一个运行的程序，外部应用与 Subject 进行交互，记录当前操作用户。Subject 代表了当前用户的安全操作，SecurityManager 则管理所有用户的安全操作。<br>SecurityManager 即安全管理器，对所有的 Subject 进行安全管理，并通过它来提供安全管理的各种服务（认证、授权等）<br>Realm 充当了应用与数据安全间的 桥梁 或 连接器。当对用户执行认证（登录）和授权（访问控制）验证时，Shiro 会从应用配置的 Realm 中查找用户及其权限信息</p>
+        
+          <p class="article-more-link">
+            <a href="/2019/02/24/shiro/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/24/shiro/" data-id="cjy8or7jh000riwnwo02fd2wa" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-elasticsearh-grammer" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/18/elasticsearh-grammer/" class="article-date">
+  <time datetime="2018-12-18T13:28:19.000Z" itemprop="datePublished">2018-12-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/18/elasticsearh-grammer/">elasticsearh_grammer</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="elastic与kibana部分"><a href="#elastic与kibana部分" class="headerlink" title="elastic与kibana部分"></a>elastic与kibana部分</h2><p>kibana是对elasticsearch进行可视化的工具，具体安装步骤这里就不详讲，在Windows下安装完后，直接运行bin下的kibana可以在命令行下运行，当然，在此之前要将es运行起来。<br>然后访问kibana默认的5601端口，即浏览器访问localhost:5601,就会出现kibana界面。kibana这里的操作事项要注意一下。</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/18/elasticsearh-grammer/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/18/elasticsearh-grammer/" data-id="cjy8or7he0002iwnwcyedoawq" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-es-hadoop-mongoDB" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/es-hadoop-mongoDB/" class="article-date">
+  <time datetime="2018-12-17T13:55:13.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/17/es-hadoop-mongoDB/">es_hadoop_mongoDB</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="elasticsearch-，hadoop-mongdb-对比"><a href="#elasticsearch-，hadoop-mongdb-对比" class="headerlink" title="elasticsearch ，hadoop,mongdb 对比"></a>elasticsearch ，hadoop,mongdb 对比</h3><p>IT界在过去几年中出现了一个有趣的现象。很多新的技术出现并立即拥抱了“大数据”。稍微老一点的技术也会将大数据添进自己的特性，避免落大部队太远，我们看到了不同技术之间的边际的模糊化。假如你有诸如Elasticsearch或者Solr这样的搜索引擎，它们存储着JSON文档，MongoDB存着JSON文档，或者一堆JSON文档存放在一个Hadoop集群的HDFS中。你可以使用这三种配置完成很多同养的事情。<br>ES是否可以作为一个NoSQL数据库？粗看，这句话说的不太对，但是这是一个合理的场景。类似地，MongoDB在MapReduce的基础上使用分片的技术同样可以完成Hadoop可以做的工作。当然使用众多功能，我们可以在Hadoop之上（Hive、HBase、Pig和同样的一些）你也可以用多种方式查询Hadoop集群中的数据。<br>那么，我们现在是否能说Hadoop、MongoDB和Elasticsearch这三个是完全相同的呢？显然不行！每个工具都有自身最为适用的场景，但是每个都有相当的灵活性能够胜任不同的角色。现在的问题就变成“这些技术的最合适的使用场景是什么？”。下面我们来瞧瞧。<br>Elasticsearch已经超越了其最初的纯搜索引擎的角色，现在已经增加了分析和可视化的特性——但是它的核心仍旧是一个全文搜索引擎。Elasticsearch建立在Lucene之上并且支持极其快速的查询和丰富的查询语法。如果你有数百万的文档需要通过关键词进行定位时，Elasticsearch肯定是最佳选择。当然，如果你的文档是JSON的，你就可以把Elasticsearch当作一种轻量级的“NoSQL数据库”。但是Elasticsearch不是一个合适的数据库引擎，对复杂的查询和聚合并不是很强，尽管统计facet可以提供一定的关于给定查询的统计信息的支持。Elasticsearch中的facet主要是用来支持分面的浏览功能。</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/17/es-hadoop-mongoDB/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/es-hadoop-mongoDB/" data-id="cjy8or7hg0003iwnwyivpwubn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-springboot-elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/springboot-elasticsearch/" class="article-date">
+  <time datetime="2018-12-17T12:31:03.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/17/springboot-elasticsearch/">springboot_elasticsearch</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="elasticsearch的使用以及和springboot结合使用"><a href="#elasticsearch的使用以及和springboot结合使用" class="headerlink" title="elasticsearch的使用以及和springboot结合使用"></a>elasticsearch的使用以及和springboot结合使用</h3><p>知道elasticsearch的存储原理之后，这里就具体介绍elasticsearch的使用以及和springboot结合使用的方法</p>
+<h4 id="elasticsearch的使用"><a href="#elasticsearch的使用" class="headerlink" title="elasticsearch的使用"></a>elasticsearch的使用</h4><p>window下直接去官网下载elasticsearch的压缩包，解压后，运行bin下面的elasticsearch.bat即可，这样就相当于运行了一个elasticsearch的server进程，检测运行是否成功：<br>使用浏览器或者postman（本质上一样）发送get请求到 <a href="http://localhost:9200/?pretty" target="_blank" rel="noopener">http://localhost:9200/?pretty</a>  </p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/17/springboot-elasticsearch/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/springboot-elasticsearch/" data-id="cjy8or7iy000kiwnwb8hgdx6t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-elasticsearch" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/17/elasticsearch/" class="article-date">
+  <time datetime="2018-12-17T07:58:01.000Z" itemprop="datePublished">2018-12-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/17/elasticsearch/">elasticsearch</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="ElasticSearch-基础介绍和索引原理分析"><a href="#ElasticSearch-基础介绍和索引原理分析" class="headerlink" title="ElasticSearch 基础介绍和索引原理分析"></a>ElasticSearch 基础介绍和索引原理分析</h2><p>Elasticsearch 是一个分布式可扩展的实时搜索和分析引擎,一个建立在全文搜索引擎 Apache Lucene(TM) 基础上的搜索引擎.当然 Elasticsearch 并不仅仅是 Lucene 那么简单，它不仅包括了全文搜索功能，还可以进行以下工作:</p>
+<ul>
+<li>分布式实时文件存储，并将每一个字段都默认编入索引，使其便于被搜索</li>
+<li>实时分析的分布式搜索引擎</li>
+<li>可扩展到上百台服务器，处理pb级别的结构化和非结构化数据
+        
+          <p class="article-more-link">
+            <a href="/2018/12/17/elasticsearch/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/17/elasticsearch/" data-id="cjy8or7ij000eiwnwmucumdfe" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-gateway" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/10/gateway/" class="article-date">
+  <time datetime="2018-12-10T13:32:26.000Z" itemprop="datePublished">2018-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/gateway/">gateway</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="springcloud-–gateway"><a href="#springcloud-–gateway" class="headerlink" title="springcloud –gateway"></a>springcloud –gateway</h2><p>####前言<br>Zuul1 是基于 Servlet 框架构建，如图所示，采用的是阻塞和多线程方式，即一个线程处理一次连接请求，这种方式在内部延迟严重、设备故障较多情况下会引起存活的连接增多和线程增加的情况发生。<br>而spring官方是不打算将zuul2继承到springcloud里面面，应该是准备用gateway来替代zuul,gateway底层是用netty实现的，所以gateway是采用的无阻塞的异步的架构，相对于zuul来说好很多。</p>
+<h3 id="gateway使用方法"><a href="#gateway使用方法" class="headerlink" title="gateway使用方法"></a>gateway使用方法</h3><p>首先添加</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/10/gateway/" data-id="cjy8or7hl0006iwnw8gbu9s0k" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-rabbitmq" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/10/rabbitmq/" class="article-date">
+  <time datetime="2018-12-10T12:29:05.000Z" itemprop="datePublished">2018-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/rabbitmq/">rabbitmq</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>RabbitMQ 即一个消息队列，主要是用来实现应用程序的异步和解耦，同时也能起到消息缓冲，消息分发的作用。<br>消息中间件在互联网公司的使用中越来越多，刚才还看到新闻阿里将RocketMQ捐献给了apache，当然了今天的主角还是讲RabbitMQ。消息中间件最主要的作用是解耦，中间件最标准的用法是生产者生产消息传送到队列，消费者从队列中拿取消息并处理，生产者不用关心是谁来消费，消费者不用关心谁在生产消息，从而达到解耦的目的。在分布式的系统中，消息队列也会被用在很多其它的方面，比如：分布式事务的支持，RPC的调用等等。<br>以前一直使用的是ActiveMQ，在实际的生产使用中也出现了一些小问题，在网络查阅了很多的资料后，决定尝试使用RabbitMQ来替换ActiveMQ，RabbitMQ的高可用性、高性能、灵活性等一些特点吸引了我们，查阅了一些资料整理出此文。</p>
+<h4 id="rabbitmq介绍"><a href="#rabbitmq介绍" class="headerlink" title="rabbitmq介绍"></a>rabbitmq介绍</h4><p>RabbitMQ是实现AMQP（高级消息队列协议）的消息中间件的一种，最初起源于金融系统，用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗。RabbitMQ主要是为了实现系统之间的双向解耦而实现的。当生产者大量产生数据时，消费者无法快速消费，那么需要一个中间层。保存这个数据。<br>AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应用层协议的一个开放标准，为面向消息的中间件设计。消息中间件主要用于组件之间的解耦，消息的发送者无需知道消息使用者的存在，反之亦然。AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。<br>RabbitMQ是一个开源的AMQP实现，服务器端用Erlang语言编写，支持多种客户端，如：Python、Ruby、.NET、Java、JMS、C、PHP、ActionScript、XMPP、STOMP等，支持AJAX。用于在分布式系统中存储转发消息，在易用性、扩展性、高可用性等方面表现不俗</p>
+        
+          <p class="article-more-link">
+            <a href="/2018/12/10/rabbitmq/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/10/rabbitmq/" data-id="cjy8or7iw000jiwnwri9lc0dx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-jvm-gc" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/10/jvm-gc/" class="article-date">
+  <time datetime="2018-12-10T06:50:50.000Z" itemprop="datePublished">2018-12-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/10/jvm-gc/">jvm_gc</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这篇文章会具体介绍Java堆空间和参数MaxPermSize的含义。这篇文章涉及下列主题，并采用Hotspot JVM：</p>
+<ul>
+<li>垃圾回收器（garbage collector，gc）</li>
+<li>jvm</li>
+<li>jvm命令行选项</li>
+</ul>
+<p>####垃圾回收器<br>垃圾回收器负责：</p>
+<ul>
+<li>分配内存</li>
+<li>保证所有正在被引用的对象还在内存中</li>
+<li>回收执行代码已经不再需要的对象所占用的内存空间
+        
+          <p class="article-more-link">
+            <a href="/2018/12/10/jvm-gc/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/12/10/jvm-gc/" data-id="cjy8or7ho0008iwnwxbll1xhk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

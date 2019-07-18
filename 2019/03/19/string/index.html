@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>string | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="String 字符串常量StringBuffer 字符串变量（线程安全）StringBuilder 字符串变量（非线程安全）简要的说， String 类型和 StringBuffer 类型的主要性能区别其实在于 String 是不可变的对象, 因此在每次对 String 类型进行改变的时候其实都等同于生成了一个新的 String 对象，然后将指针指向新的 String 对象，所以经常改变内容的字符">
+<meta property="og:type" content="article">
+<meta property="og:title" content="string">
+<meta property="og:url" content="http://yoursite.com/2019/03/19/string/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="String 字符串常量StringBuffer 字符串变量（线程安全）StringBuilder 字符串变量（非线程安全）简要的说， String 类型和 StringBuffer 类型的主要性能区别其实在于 String 是不可变的对象, 因此在每次对 String 类型进行改变的时候其实都等同于生成了一个新的 String 对象，然后将指针指向新的 String 对象，所以经常改变内容的字符">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/qingqian7/images/blob/master/map_set_list/5.gif?raw=true">
+<meta property="og:updated_time" content="2019-07-18T13:02:47.214Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="string">
+<meta name="twitter:description" content="String 字符串常量StringBuffer 字符串变量（线程安全）StringBuilder 字符串变量（非线程安全）简要的说， String 类型和 StringBuffer 类型的主要性能区别其实在于 String 是不可变的对象, 因此在每次对 String 类型进行改变的时候其实都等同于生成了一个新的 String 对象，然后将指针指向新的 String 对象，所以经常改变内容的字符">
+<meta name="twitter:image" content="https://github.com/qingqian7/images/blob/master/map_set_list/5.gif?raw=true">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-string" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/19/string/" class="article-date">
+  <time datetime="2019-03-19T11:32:58.000Z" itemprop="datePublished">2019-03-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      string
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>String 字符串常量<br>StringBuffer 字符串变量（线程安全）<br>StringBuilder 字符串变量（非线程安全）<br>简要的说， String 类型和 StringBuffer 类型的主要性能区别其实在于 String 是不可变的对象, 因此在每次对 String 类型进行改变的时候其实都等同于生成了一个新的 String 对象，然后将指针指向新的 String 对象，所以经常改变内容的字符串最好不要用 String ，因为每次生成对象都会对系统性能产生影响，特别当内存中无引用对象多了以后， JVM 的 GC 就会开始工作，那速度是一定会相当慢的。<br> 而如果是使用 StringBuffer 类则结果就不一样了，每次结果都会对 StringBuffer 对象本身进行操作，而不是生成新的对象，再改变对象引用。所以在一般情况下我们推荐使用 StringBuffer ，特别是字符串对象经常改变的情况下。而在某些特别情况下， String 对象的字符串拼接其实是被 JVM 解释成了 StringBuffer 对象的拼接，所以这些时候 String 对象的速度并不会比 StringBuffer 对象慢，而特别是以下的字符串对象生成中， String 效率是远要比 StringBuffer 快的：<br> <a id="more"></a><br> String S1 = “This is only a” + “ simple” + “ test”;<br> StringBuffer Sb = new StringBuilder(“This is only a”).append(“ simple”).append(“ test”);<br> 你会很惊讶的发现，生成 String S1 对象的速度简直太快了，而这个时候 StringBuffer 居然速度上根本一点都不占优势。其实这是 JVM 的一个把戏，在 JVM 眼里，这个<br> String S1 = “This is only a” + “ simple” + “test”; 其实就是：<br> String S1 = “This is only a simple test”; 所以当然不需要太多的时间了。但大家这里要注意的是，如果你的字符串是来自另外的 String 对象的话，速度就没那么快了，譬如：<br>String S2 = “This is only a”;<br>String S3 = “ simple”;<br>String S4 = “ test”;<br>String S1 = S2 +S3 + S4;<br>这时候 JVM 会规规矩矩的按照原来的方式去做</p>
+<p>在大部分情况下 StringBuffer &gt; String<br>StringBuffer<br>Java.lang.StringBuffer线程安全的可变字符序列。一个类似于 String 的字符串缓冲区，但不能修改。虽然在任意时间点上它都包含某种特定的字符序列，但通过某些方法调用可以改变该序列的长度和内容。<br>可将字符串缓冲区安全地用于多个线程。可以在必要时对这些方法进行同步，因此任意特定实例上的所有操作就好像是以串行顺序发生的，该顺序与所涉及的每个线程进行的方法调用顺序一致。<br>StringBuffer 上的主要操作是 append 和 insert 方法，可重载这些方法，以接受任意类型的数据。每个方法都能有效地将给定的数据转换成字符串，然后将该字符串的字符追加或插入到字符串缓冲区中。append 方法始终将这些字符添加到缓冲区的末端；而 insert 方法则在指定的点添加字符。<br>例如，如果 z 引用一个当前内容是“start”的字符串缓冲区对象，则此方法调用 z.append(“le”) 会使字符串缓冲区包含“startle”，而 z.insert(4, “le”) 将更改字符串缓冲区，使之包含“starlet”。<br>在大部分情况下 StringBuilder &gt; StringBuffer<br>java.lang.StringBuilder<br>java.lang.StringBuilder一个可变的字符序列是5.0新增的。此类提供一个与 StringBuffer 兼容的 API，但不保证同步。该类被设计用作 StringBuffer 的一个简易替换，用在字符串缓冲区被单个线程使用的时候（这种情况很普遍）。如果可能，建议优先采用该类，因为在大多数实现中，它比 StringBuffer 要快。两者的方法基本相同。</p>
+<p>作者：每次上网冲杯Java时，都能看到关于String无休无止的争论。还是觉得有必要让这个讨厌又很可爱的String美眉，赤裸裸的站在我们这些Java色狼面前了。嘿嘿….<br>众所周知，String是由字符组成的串，在程序中使用频率很高。Java中的String是一个类，而并非基本数据类型。 不过她却不是普通的类哦！！！</p>
+<p>【镜头1】 String对象的创建<br>      1、关于类对象的创建，很普通的一种方式就是利用构造器，String类也不例外：String s=new String(“Hello world”); 问题是参数”Hello world”是什么东西，也是字符串对象吗?莫非用字符串对象创建一个字符串对象?<br>      2、当然，String类对象还有一种大家都很喜欢的创建方式：String s=”Hello world”; 但是有点怪呀，怎么与基本数据类型的赋值操作（int i=1）很像呀?<br>      在开始解释这些问题之前，我们先引入一些必要的知识:</p>
+<p>★ Java class文件结构 和常量池<br>      我们都知道，Java程序要运行，首先需要编译器将源代码文件编译成字节码文件(也就是.class文件)。然后在由JVM解释执行。<br>      class文件是8位字节的二进制流 。这些二进制流的涵义由一些紧凑的有意义的项 组成。比如class字节流中最开始的4个字节组成的项叫做魔数 (magic)，其意义在于分辨class文件(值为0xCAFEBABE)与非class文件。class字节流大致结构如下图左侧。<br><img src="https://github.com/qingqian7/images/blob/master/map_set_list/5.gif?raw=true" alt="images"><br>其中，在class文件中有一个非常重要的项——常量池 。这个常量池专门放置源代码中的符号信息(并且不同的符号信息放置在不同标志的常量表中)。如上图右侧是HelloWorld代码中的常量表（HelloWorld代码如下），其中有四个不同类型的常量表(四个不同的常量池入口)。关于常量池的具体细节，请参照我的博客《Class文件内容及常量池 》</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class HelloWorld&#123;  </span><br><span class="line">    void hello()&#123;  </span><br><span class="line">        System.out.println(&quot;Hello world&quot;);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 通过上图可见，代码中的”Hello world”字符串字面值被编译之后，可以清楚的看到存放在了class常量池中的字符串常量表中(上图右侧红框区域)<br> ★ JVM运行class文件<br> 源代码编译成class文件之后，JVM就要运行这个class文件。它首先会用类装载器加载进class文件。然后需要创建许多内存数据结构来存放class文件中的字节数据。比如class文件对应的类信息数据、常量池结构、方法中的二进制指令序列、类方法与字段的描述信息等等。当然，在运行的时候，还需要为方法创建栈帧等。这么多的内存结构当然需要管理，JVM会把这些东西都组织到几个“运行时数据区 ”中。这里面就有我们经常说的“方法区 ”、“堆 ”、“Java栈 ”等。详细请参见我的博客《Java 虚拟机体系结构 》 。<br> 上面我们提到了，在Java源代码中的每一个字面值字符串，都会在编译成class文件阶段，形成标志号 为8(CONSTANT_String_info)的常量表 。 当JVM加载 class文件的时候，会为对应的常量池建立一个内存数据结构，并存放在方法区中。同时JVM会自动为CONSTANT_String_info常量表中 的字符串常量字面值 在堆中 创建 新的String对象(intern字符串 对象，又叫拘留字符串对象)。然后把CONSTANT_String_info常量表的入口地址转变成这个堆中String对象的直接地址(常量池解 析)。<br>  这里很关键的就是这个拘留字符串对象 。源代码中所有相同字面值的字符串常量只可能建立唯一一个拘留字符串对象。 实际上JVM是通过一个记录了拘留字符串引用的内部数据结构来维持这一特性的。在Java程序中，可以调用String的intern()方法来使得一个常规字符串对象成为拘留字符串对象。我们会在后面介绍这个方法的。</p>
+<p> ★ 操作码助忆符指令<br>       有了上面阐述的两个知识前提，下面我们将根据二进制指令来区别两种字符串对象的创建方式：  </p>
+<pre><code>(1) String s=new String(&quot;Hello world&quot;);编译成class文件后的指令(在myeclipse中查看):</code></pre>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0  new java.lang.String [15]  //在堆中分配一个String类对象的空间，并将该对象的地址堆入操作数栈。  </span><br><span class="line">3  dup //复制操作数栈顶数据，并压入操作数栈。该指令使得操作数栈中有两个String对象的引用值。  </span><br><span class="line">4  ldc &lt;String &quot;Hello world&quot;&gt; [17] //将常量池中的字符串常量&quot;Hello world&quot;指向的堆中拘留String对象的地址压入操作数栈  </span><br><span class="line">6  invokespecial java.lang.String(java.lang.String) [19] //调用String的初始化方法，弹出操作数栈栈顶的两个对象地址，用拘留String对象的值初始化new指令创建的String对象，然后将这个对象的引用压入操作数栈  </span><br><span class="line">9  astore_1 [s] // 弹出操作数栈顶数据存放在局部变量区的第一个位置上。此时存放的是new指令创建出的，已经被初始化的String对象的地址 （此时的栈顶值弹出存入局部变量中去)。</span><br></pre></td></tr></table></figure>
+
+<p>  注意：<br>  【这里有个dup指令。其作用就是复制之前分配的Java.lang.String空间的引用并压入栈顶。那么这里为什么需要这样么做呢？因为invokespecial指令通过[15]这个常量池入口寻找到了java.lang.String()构造方法，构造方法虽然找到了。但是必须还得知道是谁的构造方法，所以要将之前分配的空间的应用压入栈顶让invokespecial命令应用才知道原来这个构造方法是刚才创建的那个引用的，调用完成之后将栈顶的值弹出。之后调用astore_1将此时的栈顶值弹出存入局部变量中去。】<br>   事实上，在运行这段指令之前，JVM就已经为”Hello world”在堆中创建了一个拘留字符串( 值得注意的是：如果源程序中还有一个”Hello world”字符串常量，那么他们都对应了同一个堆中的拘留字符串)。然后用这个拘留字符串的值来初始化堆中用new指令创建出来的新的String对象，局部变量s实际上存储的是new出来的堆对象地址。 大家注意了，此时在JVM管理的堆中，有两个相同字符串值的String对象：一个是拘留字符串对象，一个是new新建的字符串对象。如果还有一条创建语句String s1=new String(“Hello world”)；堆中有几个值为”Hello world”的字符串呢? 答案是3个，大家好好想想为什么吧！</p>
+<p>   (2)将String s=”Hello world”;编译成class文件后的指令:<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0  ldc &lt;String &quot;Hello world&quot;&gt; [15]//将常量池中的字符串常量&quot;Hello world&quot;指向的堆中拘留String对象的地址压入操作数栈  </span><br><span class="line">2  astore_1 [str] // 弹出操作数栈顶数据存放在局部变量区的第一个位置上。此时存放的是拘留字符串对象在堆中的地址</span><br></pre></td></tr></table></figure></p>
+<p> 和上面的创建指令有很大的不同，局部变量s存储的是早已创建好的拘留字符串的堆地址(没有new 的对象了)。 大家好好想想，如果还有一条穿件语句String s1=”Hello word”；此时堆中有几个值为”Hello world”的字符串呢?答案是1个。那么局部变量s与s1存储的地址是否相同呢？  呵呵, 这个你应该知道了吧。</p>
+<p> ★ 镜头总结： String类型脱光了其实也很普通。真正让她神秘的原因就在于CONSTANT_String_info常量表 和拘留字符串对象 的存在。现在我们可以解决江湖上的许多纷争了。</p>
+<p>   【 纷争1】关于字符串相等关系的争论<br>   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//代码1  </span><br><span class="line">String sa=new String(&quot;Hello world&quot;);            </span><br><span class="line">String sb=new String(&quot;Hello world&quot;);      </span><br><span class="line">System.out.println(sa==sb);  // false       </span><br><span class="line">//代码2    </span><br><span class="line">String sc=&quot;Hello world&quot;;    </span><br><span class="line">String sd=&quot;Hello world&quot;;  </span><br><span class="line">System.out.println(sc==sd);  // true</span><br></pre></td></tr></table></figure></p>
+<p>   代码1中局部变量sa,sb中存储的是JVM在堆中new出来的两个String对象的内存地址。虽然这两个String对象的值(char[]存放的字符序列)都是”Hello world”。 因此”==”比较的是两个不同的堆地址。代码2中局部变量sc,sd中存储的也是地址，但却都是常量池中”Hello world”指向的堆的唯一的那个拘留字符串对象的地址 。自然相等了。<br>   【纷争2】 字符串“+”操作的内幕<br>   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//代码1  </span><br><span class="line">String sa = &quot;ab&quot;;                                          </span><br><span class="line">String sb = &quot;cd&quot;;                                       </span><br><span class="line">String sab=sa+sb;                                      </span><br><span class="line">String s=&quot;abcd&quot;;  </span><br><span class="line">System.out.println(sab==s); // false  </span><br><span class="line">//代码2  </span><br><span class="line">String sc=&quot;ab&quot;+&quot;cd&quot;;  </span><br><span class="line">String sd=&quot;abcd&quot;;  </span><br><span class="line">System.out.println(sc==sd); //true</span><br></pre></td></tr></table></figure></p>
+<p>   代码1中局部变量sa,sb存储的是堆中两个拘留字符串对象的地址。而当执行sa+sb时，JVM首先会在堆中创建一个StringBuilder类，同时用sa指向的拘留字符串对象完成初始化，然后调用append方法完成对sb所指向的拘留字符串的合并操作，接着调用StringBuilder的toString()方法在堆中创建一个String对象，最后将刚生成的String对象的堆地址存放在局部变量sab中。而局部变量s存储的是常量池中”abcd”所对应的拘留字符串对象的地址。 sab与s地址当然不一样了。这里要注意了，代码1的堆中实际上有五个字符串对象：三个拘留字符串对象、一个String对象和一个StringBuilder对象。<br>         代码2中”ab”+”cd”会直接在编译期就合并成常量”abcd”， 因此相同字面值常量”abcd”所对应的是同一个拘留字符串对象，自然地址也就相同。</p>
+<p>  【镜头二】  String三姐妹(String,StringBuffer,StringBuilder)<br>              String扒的差不多了。但他还有两个妹妹StringBuffer,StringBuilder长的也不错哦！我们也要下手了：<br>                     String(大姐，出生于JDK1.0时代)          不可变字符序列<br>                     StringBuffer(二姐，出生于JDK1.0时代)    线程安全的可变字符序列<br>                     StringBuilder(小妹，出生于JDK1.5时代)   非线程安全的可变字符序列<br>    ★StringBuffer与String的可变性问题。<br>                我们先看看这两个类的部分源代码：<br>   <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">      //String   </span><br><span class="line">      public final class String  </span><br><span class="line">      &#123;  </span><br><span class="line">              private final char value[];  </span><br><span class="line">        </span><br><span class="line">               public String(String original) &#123;  </span><br><span class="line">                    // 把原字符串original切分成字符数组并赋给value[];  </span><br><span class="line">               &#125;  </span><br><span class="line">      &#125;  </span><br><span class="line">        </span><br><span class="line">      //StringBuffer   </span><br><span class="line">      public final class StringBuffer extends AbstractStringBuilder  </span><br><span class="line">      &#123;  </span><br><span class="line">               char value[]; //继承了父类AbstractStringBuilder中的value[]  </span><br><span class="line">               public StringBuffer(String str) &#123;  </span><br><span class="line">                       super(str.length() + 16); //继承父类的构造器，并创建一个大小为str.length()+16的value[]数组  </span><br><span class="line">                       append(str); //将str切分成字符序列并加入到value[]中  </span><br><span class="line">              &#125;  </span><br><span class="line">      &#125;  </span><br><span class="line">  ````  </span><br><span class="line">很显然，String和StringBuffer中的value[]都用于存储字符序列。但是,</span><br><span class="line">      (1) String中的是常量(final)数组，只能被赋值一次。 </span><br><span class="line">      比如：new String(&quot;abc&quot;)使得value[]=&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;&#125;(查看jdk String 就是这么实现的)，之后这个String对象中的value[]再也不能改变了。这也正是大家常说的，String是不可变的原因 。    </span><br><span class="line">      注意：这个对初学者来说有个误区，有人说String str1=new String(&quot;abc&quot;); str1=new String(&quot;cba&quot;);不是改变了字符串str1吗？那么你有必要先搞懂对象引用和对象本身的区别。这里我简单的说明一下，对象本身指的是存放在堆空间中的该对象的实例数据(非静态非常量字段)。而对象引用指的是堆中对象本身所存放的地址，一般方法区和Java栈中存储的都是对象引用，而非对象本身的数据。</span><br><span class="line">      (2) StringBuffer中的value[]就是一个很普通的数组，而且可以通过append()方法将新字符串加入value[]末尾。这样也就改变了value[]的内容和大小了。</span><br><span class="line">      比如：new StringBuffer(&quot;abc&quot;)使得value[]=&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,&apos;&apos;,&apos;&apos;...&#125;(注意构造的长度是str.length()+16)。如果再将这个对象append(&quot;abc&quot;)，那么这个对象中的value[]=&#123;&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,&apos;a&apos;,&apos;b&apos;,&apos;c&apos;,&apos;&apos;....&#125;。这也就是为什么大家说 StringBuffer是可变字符串 的涵义了。从这一点也可以看出，StringBuffer中的value[]完全可以作为字符串的缓冲区功能。其累加性能是很不错的，在后面我们会进行比较。</span><br><span class="line">     总结，讨论String和StringBuffer可不可变。本质上是指对象中的value[]字符数组可不可变，而不是对象引用可不可变。</span><br><span class="line">     </span><br><span class="line">  ★StringBuffer与StringBuilder的线程安全性问题 </span><br><span class="line">        StringBuffer和StringBuilder可以算是双胞胎了，这两者的方法没有很大区别。但在线程安全性方面，StringBuffer允许多线程进行字符操作。这是因为在源代码中StringBuffer的很多方法都被关键字synchronized 修饰了，而StringBuilder没有。</span><br><span class="line">        有多线程编程经验的程序员应该知道synchronized。这个关键字是为线程同步机制 设定的。我简要阐述一下synchronized的含义：</span><br><span class="line">        每一个类对象都对应一把锁，当某个线程A调用类对象O中的synchronized方法M时，必须获得对象O的锁才能够执行M方法，否则线程A阻塞。一旦线程A开始执行M方法，将独占对象O的锁。使得其它需要调用O对象的M方法的线程阻塞。只有线程A执行完毕，释放锁后。那些阻塞线程才有机会重新调用M方法。这就是解决线程同步问题的锁机制。 </span><br><span class="line">        了解了synchronized的含义以后，大家可能都会有这个感觉。多线程编程中StringBuffer比StringBuilder要安全多了 ，事实确实如此。如果有多个线程需要对同一个字符串缓冲区进行操作的时候，StringBuffer应该是不二选择。</span><br><span class="line">        注意：是不是String也不安全呢？事实上不存在这个问题，String是不可变的。线程对于堆中指定的一个String对象只能读取，无法修改。试问：还有什么不安全的呢？ </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  ★String和StringBuffer的效率问题（这可是个热门话题呀!） </span><br><span class="line">        首先说明一点：StringBuffer和StringBuilder可谓双胞胎，StringBuilder是1.5新引入的，其前身就是StringBuffer。StringBuilder的效率比StringBuffer稍高，如果不考虑线程安全，StringBuilder应该是首选。另外，JVM运行程序主要的时间耗费是在创建对象和回收对象上。</span><br><span class="line">  </span><br><span class="line">  我们用下面的代码运行1W次字符串的连接操作，测试String,StringBuffer所运行的时间。</span><br></pre></td></tr></table></figure></p>
+<p>   //测试代码<br>   public class RunTime{<br>       public static void main(String[] args){<br>              ● 测试代码位置1<br>             long beginTime=System.currentTimeMillis();<br>             for(int i=0;i&lt;10000;i++){<br>                    ● 测试代码位置2<br>             }<br>             long endTime=System.currentTimeMillis();<br>             System.out.println(endTime-beginTime);<br>       }<br>   }<br>   ````</p>
+<h4 id="1-String常量与String变量的”-”操作比较"><a href="#1-String常量与String变量的”-”操作比较" class="headerlink" title="(1) String常量与String变量的”+”操作比较"></a>(1) String常量与String变量的”+”操作比较</h4><p>   ▲测试①代码：     (测试代码位置1)  String str=””;<br>                                 (测试代码位置2)  str=”Heart”+”Raid”;<br>              [耗时：  0ms]<br>         ▲测试②代码        (测试代码位置1)  String s1=”Heart”;<br>                                                             String s2=”Raid”;<br>                                                                String str=””;<br>                                    (测试代码位置2)  str=s1+s2;<br>              [耗时：  15—16ms]<br>        结论：String常量的“+连接”  稍优于  String变量的“+连接”。<br>        原因：测试①的”Heart”+”Raid”在编译阶段就已经连接起来，形成了一个字符串常量”HeartRaid”，并指向堆中的拘留字符串对象。运行时只需要将”HeartRaid”指向的拘留字符串对象地址取出1W次，存放在局部变量str中。这确实不需要什么时间。<br>                 测试②中局部变量s1和s2存放的是两个不同的拘留字符串对象的地址。然后会通过下面三个步骤完成“+连接”：<br>                                  1、StringBuilder temp=new StringBuilder(s1)，<br>                                  2、temp.append(s2);<br>                                  3、str=temp.toString();<br>                 我们发现，虽然在中间的时候也用到了append()方法，但是在开始和结束的时候分别创建了StringBuilder和String对象。可想而知：调用1W次，是不是就创建了1W次这两种对象呢？不划算。<br>       但是，String变量的”+连接”操作比String常量的”+连接”操作使用的更加广泛。 这一点是不言而喻的。</p>
+<h4 id="2-String对象的”累-”连接操作与StringBuffer对象的append-累和连接操作比较。"><a href="#2-String对象的”累-”连接操作与StringBuffer对象的append-累和连接操作比较。" class="headerlink" title="(2)String对象的”累+”连接操作与StringBuffer对象的append()累和连接操作比较。"></a>(2)String对象的”累+”连接操作与StringBuffer对象的append()累和连接操作比较。</h4><p>  ▲测试①代码：     (代码位置1)  String s1=”Heart”;<br>                                                         String s=””;<br>                                      (代码位置2)  s=s+s1;<br>               [耗时：  4200—4500ms]<br>            ▲测试②代码        (代码位置1)  String s1=”Heart”;<br>                                                         StringBuffer sb=new StringBuffer();<br>                                      (代码位置2) sb.append(s1);<br>               [耗时：  0ms(当循环100000次的时候，耗时大概16—31ms)]<br>           结论：大量字符串累加时，StringBuffer的append()效率远好于String对象的”累+”连接<br>           原因：测试① 中的s=s+s1，JVM会利用首先创建一个StringBuilder，并利用append方法完成s和s1所指向的字符串对象值的合并操作，接着调用StringBuilder的 toString()方法在堆中创建一个新的String对象，其值为刚才字符串的合并结果。而局部变量s指向了新创建的String对象。<br>                    因为String对象中的value[]是不能改变的，每一次合并后字符串值都需要创建一个新的String对象来存放。循环1W次自然需要创建1W个String对象和1W个StringBuilder对象，效率低就可想而知了。<br>                    测试②中sb.append(s1);只需要将自己的value[]数组不停的扩大来存放s1即可。循环过程中无需在堆中创建任何新的对象。效率高就不足为奇了。</p>
+<p>  ★ 镜头总结：<br>     (1) 在编译阶段就能够确定的字符串常量，完全没有必要创建String或StringBuffer对象。直接使用字符串常量的”+”连接操作效率最高。<br>     (2) StringBuffer对象的append效率要高于String对象的”+”连接操作。<br>     (3) 不停的创建对象是程序低效的一个重要原因。那么相同的字符串值能否在堆中只创建一个String对象那。显然拘留字符串能够做到这一点，除了程序中的字符串常量会被JVM自动创建拘留字符串之外，调用String的intern()方法也能做到这一点。当调用intern()时，如果常量池中已经有了当前String的值，那么返回这个常量指向拘留对象的地址。如果没有，则将String值加入常量池中，并创建一个新的拘留字符串对象。</p>
+<h3 id="不可变带来的好处"><a href="#不可变带来的好处" class="headerlink" title="不可变带来的好处"></a>不可变带来的好处</h3><p>  String 设计成不可变，带来的好处有以下几点</p>
+<h4 id="一、安全性"><a href="#一、安全性" class="headerlink" title="一、安全性"></a>一、安全性</h4><p>  1、多线程安全性<br>  因为String是不可变的，因此在多线程操作下，它是安全的，我们看下如下代码：</p>
+<p>  1public String get(String str){<br>  2  str  =’aaa’;<br>  3  return str;<br>  4}<br>  试想一下如果String是可变的，那么get方法内部改变了str的值，方法外部str也会随之改变。</p>
+<p>  2、类加载中体现的安全性<br>  类加载器要用到字符串，不可变性提供了安全性，以便正确的类被加载。譬如你想加载java.sql.Connection类，而这个值被改成了hacked.Connection，那么会对你的数据库造成不可知的破坏。</p>
+<h4 id="二、使用常量池节省空间"><a href="#二、使用常量池节省空间" class="headerlink" title="二、使用常量池节省空间"></a>二、使用常量池节省空间</h4><p>  只有当字符串是不可变的，字符串池才有可能实现。字符串池的实现可以在运行时节约很多heap空间，因为不同的字符串变量都指向池中的同一个字符串。但如果字符串是可变的，那么String interning将不能实现(String interning是指对不同的字符串仅仅只保存一个，即不会保存多个相同的字符串)，因为这样的话，如果变量改变了它的值，那么其它指向这个值的变量的值也会一起改变。</p>
+<h4 id="三、缓存hashcode"><a href="#三、缓存hashcode" class="headerlink" title="三、缓存hashcode"></a>三、缓存hashcode</h4><p>  因为字符串是不可变的，所以在它创建的时候hashcode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。<br>  我们可以看到String中有如下代码：</p>
+<p>  1private int hash;//this is used to cache hash code.<br>  以上代码中hash变量中就保存了一个String对象的hashcode，因为String类不可变，所以一旦对象被创建，该hash值也无法改变。所以，每次想要使用该对象的hashcode的时候，直接返回即可。</p>
+<h3 id="不可变带来的缺点"><a href="#不可变带来的缺点" class="headerlink" title="不可变带来的缺点"></a>不可变带来的缺点</h3><p>  不可变对象也有一个缺点就是会制造大量垃圾，由于他们不能被重用而且对于它们的使用就是”用“然后”扔“，字符串就是一个典型的例子，它会创造很多的垃圾，给垃圾收集带来很大的麻烦。当然这只是个极端的例子，合理的使用不可变对象会创造很大的价值。</p>
+<p>  密码应该存放在字符数组中而不是String中<br>  由于String在Java中是不可变的，如果你将密码以明文的形式保存成字符串，那么它将一直留在内存中，直到垃圾收集器把它清除。而由于字符串被放在字符串缓冲池中以方便重复使用，所以它就可能在内存中被保留很长时间，而这将导致安全隐患，因为任何能够访问内存(memory dump内存转储)的人都能清晰的看到文本中的密码，这也是为什么你应该总是使用加密的形式而不是明文来保存密码。由于字符串是不可变的，所以没有任何方式可以修改字符串的值，因为每次修改都将产生新的字符串，然而如果你使用char[]来保存密码，你仍然可以将其中所有的元素都设置为空或者零。所以将密码保存到字符数组中很明显的降低了密码被窃取的风险。</p>
+<p>  当然只使用字符数组也是不够的，为了更安全你需要将数组内容进行转化。 建议使用哈希的或者是加密过的密码而不是明文，然后一旦完成验证，就将它从内存中清除掉。        </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/03/19/string/" data-id="cjy8or7jw000ziwnwnpi0if8y" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/22/redislock/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          redislock
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/19/map/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">map</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

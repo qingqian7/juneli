@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>zookeeperlock | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="实现分布式锁目前有三种流行方案，分别为基于数据库、Redis、Zookeeper的方案，其中前两种方案网络上有很多资料可以参考，本文不做展开。我们来看下使用Zookeeper如何实现分布式锁。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeperlock">
+<meta property="og:url" content="http://yoursite.com/2019/04/18/zookeeperlock/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实现分布式锁目前有三种流行方案，分别为基于数据库、Redis、Zookeeper的方案，其中前两种方案网络上有很多资料可以参考，本文不做展开。我们来看下使用Zookeeper如何实现分布式锁。">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-18T13:02:48.324Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zookeeperlock">
+<meta name="twitter:description" content="实现分布式锁目前有三种流行方案，分别为基于数据库、Redis、Zookeeper的方案，其中前两种方案网络上有很多资料可以参考，本文不做展开。我们来看下使用Zookeeper如何实现分布式锁。">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-zookeeperlock" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/18/zookeeperlock/" class="article-date">
+  <time datetime="2019-04-18T08:25:44.000Z" itemprop="datePublished">2019-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      zookeeperlock
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实现分布式锁目前有三种流行方案，分别为基于数据库、Redis、Zookeeper的方案，其中前两种方案网络上有很多资料可以参考，本文不做展开。我们来看下使用Zookeeper如何实现分布式锁。</p>
+<a id="more"></a>
+<h4 id="什么是Zookeeper？"><a href="#什么是Zookeeper？" class="headerlink" title="什么是Zookeeper？"></a>什么是Zookeeper？</h4><p>Zookeeper（业界简称zk）是一种提供配置管理、分布式协同以及命名的中心化服务，这些提供的功能都是分布式系统中非常底层且必不可少的基本功能，但是如果自己实现这些功能而且要达到高吞吐、低延迟同时还要保持一致性和可用性，实际上非常困难。因此zookeeper提供了这些功能，开发者在zookeeper之上构建自己的各种分布式系统。</p>
+<p>虽然zookeeper的实现比较复杂，但是它提供的模型抽象却是非常简单的。Zookeeper提供一个多层级的节点命名空间（节点称为znode），每个节点都用一个以斜杠（/）分隔的路径表示，而且每个节点都有父节点（根节点除外），非常类似于文件系统。例如，/foo/doo这个表示一个znode，它的父节点为/foo，父父节点为/，而/为根节点没有父节点。与文件系统不同的是，这些节点都可以设置关联的数据，而文件系统中只有文件节点可以存放数据而目录节点不行。Zookeeper为了保证高吞吐和低延迟，在内存中维护了这个树状的目录结构，这种特性使得Zookeeper不能用于存放大量的数据，每个节点的存放数据上限为1M。</p>
+<p>而为了保证高可用，zookeeper需要以集群形态来部署，这样只要集群中大部分机器是可用的（能够容忍一定的机器故障），那么zookeeper本身仍然是可用的。客户端在使用zookeeper时，需要知道集群机器列表，通过与集群中的某一台机器建立TCP连接来使用服务，客户端使用这个TCP链接来发送请求、获取结果、获取监听事件以及发送心跳包。如果这个连接异常断开了，客户端可以连接到另外的机器上。</p>
+<p>客户端的读请求可以被集群中的任意一台机器处理，如果读请求在节点上注册了监听器，这个监听器也是由所连接的zookeeper机器来处理。对于写请求，这些请求会同时发给其他zookeeper机器并且达成一致后，请求才会返回成功。因此，随着zookeeper的集群机器增多，读请求的吞吐会提高但是写请求的吞吐会下降。</p>
+<p>有序性是zookeeper中非常重要的一个特性，所有的更新都是全局有序的，每个更新都有一个唯一的时间戳，这个时间戳称为zxid（Zookeeper Transaction Id）。而读请求只会相对于更新有序，也就是读请求的返回结果中会带有这个zookeeper最新的zxid。</p>
+<h4 id="如何使用zookeeper实现分布式锁？"><a href="#如何使用zookeeper实现分布式锁？" class="headerlink" title="如何使用zookeeper实现分布式锁？"></a>如何使用zookeeper实现分布式锁？</h4><p>在描述算法流程之前，先看下zookeeper中几个关于节点的有趣的性质：</p>
+<ul>
+<li><p>有序节点：假如当前有一个父节点为/lock，我们可以在这个父节点下面创建子节点；zookeeper提供了一个可选的有序特性，例如我们可以创建子节点“/lock/node-”并且指明有序，那么zookeeper在生成子节点时会根据当前的子节点数量自动添加整数序号，也就是说如果是第一个创建的子节点，那么生成的子节点为/lock/node-0000000000，下一个节点则为/lock/node-0000000001，依次类推。</p>
+</li>
+<li><p>临时节点：客户端可以建立一个临时节点，在会话结束或者会话超时后，zookeeper会自动删除该节点。</p>
+</li>
+<li><p>事件监听：在读取数据时，我们可以同时对节点设置事件监听，当节点数据或结构变化时，zookeeper会通知客户端。当前zookeeper有如下四种事件：1）节点创建；2）节点删除；3）节点数据修改；4）子节点变更。</p>
+</li>
+</ul>
+<p>下面描述使用zookeeper实现分布式锁的算法流程，假设锁空间的根节点为/lock：</p>
+<ul>
+<li><p>客户端连接zookeeper，并在/lock下创建临时的且有序的子节点，第一个客户端对应的子节点为/lock/lock-0000000000，第二个为/lock/lock-0000000001，以此类推。</p>
+</li>
+<li><p>客户端获取/lock下的子节点列表，判断自己创建的子节点是否为当前子节点列表中序号最小的子节点，如果是则认为获得锁，否则监听/lock的子节点变更消息，获得子节点变更通知后重复此步骤直至获得锁；</p>
+</li>
+<li><p>执行业务代码；</p>
+</li>
+<li><p>完成业务流程后，删除对应的子节点释放锁。</p>
+</li>
+</ul>
+<p>步骤1中创建的临时节点能够保证在故障的情况下锁也能被释放，考虑这么个场景：假如客户端a当前创建的子节点为序号最小的节点，获得锁之后客户端所在机器宕机了，客户端没有主动删除子节点；如果创建的是永久的节点，那么这个锁永远不会释放，导致死锁；由于创建的是临时节点，客户端宕机后，过了一定时间zookeeper没有收到客户端的心跳包判断会话失效，将临时节点删除从而释放锁。</p>
+<p>另外细心的朋友可能会想到，在步骤2中获取子节点列表与设置监听这两步操作的原子性问题，考虑这么个场景：客户端a对应子节点为/lock/lock-0000000000，客户端b对应子节点为/lock/lock-0000000001，客户端b获取子节点列表时发现自己不是序号最小的，但是在设置监听器前客户端a完成业务流程删除了子节点/lock/lock-0000000000，客户端b设置的监听器岂不是丢失了这个事件从而导致永远等待了？这个问题不存在的。因为zookeeper提供的API中设置监听器的操作与读操作是原子执行的，也就是说在读子节点列表时同时设置监听器，保证不会丢失事件。</p>
+<p>最后，对于这个算法有个极大的优化点：假如当前有1000个节点在等待锁，如果获得锁的客户端释放锁时，这1000个客户端都会被唤醒，这种情况称为“羊群效应”；在这种羊群效应中，zookeeper需要通知1000个客户端，这会阻塞其他的操作，最好的情况应该只唤醒新的最小节点对应的客户端。应该怎么做呢？在设置事件监听时，每个客户端应该对刚好在它之前的子节点设置事件监听，例如子节点列表为/lock/lock-0000000000、/lock/lock-0000000001、/lock/lock-0000000002，序号为1的客户端监听序号为0的子节点删除消息，序号为2的监听序号为1的子节点删除消息。</p>
+<p>所以调整后的分布式锁算法流程如下：</p>
+<ul>
+<li><p>客户端连接zookeeper，并在/lock下创建临时的且有序的子节点，第一个客户端对应的子节点为/lock/lock-0000000000，第二个为/lock/lock-0000000001，以此类推；</p>
+</li>
+<li><p>客户端获取/lock下的子节点列表，判断自己创建的子节点是否为当前子节点列表中序号最小的子节点，如果是则认为获得锁，否则监听刚好在自己之前一位的子节点删除消息，获得子节点变更通知后重复此步骤直至获得锁；</p>
+</li>
+<li><p>执行业务代码；</p>
+</li>
+<li><p>完成业务流程后，删除对应的子节点释放锁。</p>
+<h4 id="Curator的源码分析"><a href="#Curator的源码分析" class="headerlink" title="Curator的源码分析"></a>Curator的源码分析</h4></li>
+</ul>
+<p>虽然zookeeper原生客户端暴露的API已经非常简洁了，但是实现一个分布式锁还是比较麻烦的…我们可以直接使用curator这个开源项目提供的zookeeper分布式锁实现。</p>
+<p>我们只需要引入下面这个包（基于maven）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">&lt;groupId&gt;org.apache.curator&lt;/groupId&gt;</span><br><span class="line">&lt;artifactId&gt;curator-recipes&lt;/artifactId&gt;</span><br><span class="line">&lt;version&gt;4.0.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">//创建zookeeper的客户端</span><br><span class="line">RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);</span><br><span class="line">CuratorFramework client = CuratorFrameworkFactory.newClient(&quot;10.21.41.181:2181,10.21.42.47:2181,10.21.49.252:2181&quot;, retryPolicy);</span><br><span class="line">client.start();</span><br><span class="line">//创建分布式锁, 锁空间的根节点路径为/curator/lock</span><br><span class="line">InterProcessMutex mutex = new InterProcessMutex(client, &quot;/curator/lock&quot;);</span><br><span class="line">mutex.acquire();</span><br><span class="line">//获得了锁, 进行业务流程</span><br><span class="line">System.out.println(&quot;Enter mutex&quot;);</span><br><span class="line">//完成业务流程, 释放锁</span><br><span class="line">mutex.release();</span><br><span class="line">//关闭客户端</span><br><span class="line">client.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获得锁和释放锁的操作就是mutex.acquire()和mutex.release()<br>下面看下curator源码实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* 获取锁，当锁被占用时会阻塞等待，这个操作支持同线程的可重入（也就是重复获取锁），acquire的次数需要与release的次数相同。</span><br><span class="line">* @throws Exception ZK errors, connection interruptions</span><br><span class="line">*/</span><br><span class="line">@Override</span><br><span class="line">public void acquire() throws Exception</span><br><span class="line">&#123;</span><br><span class="line">    if ( !internalLock(-1, null) )</span><br><span class="line">    &#123;</span><br><span class="line">        throw new IOException(&quot;Lost connection while trying to acquire lock: &quot; + basePath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有个地方需要注意，当与zookeeper通信存在异常时，acquire会直接抛出异常，需要使用者自身做重试策略。代码中调用了internalLock(-1, null)，参数表明在锁被占用时永久阻塞等待。internalLock的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">private boolean internalLock(long time, TimeUnit unit) throws Exception</span><br><span class="line">&#123;</span><br><span class="line">//这里处理同线程的可重入性，如果已经获得锁，那么只是在对应的数据结构中增加acquire的次数统计，直接返回成功</span><br><span class="line">    Thread currentThread = Thread.currentThread();</span><br><span class="line">    //这里的threadData是一个concurrentHashMap&lt;Thread,LockData&gt;</span><br><span class="line">    LockData lockData = threadData.get(currentThread);</span><br><span class="line">    if ( lockData != null )</span><br><span class="line">        &#123;</span><br><span class="line">        // re-entering</span><br><span class="line">        lockData.lockCount.incrementAndGet();</span><br><span class="line">        return true;</span><br><span class="line">        &#125;</span><br><span class="line">//这里才真正去zookeeper中获取锁</span><br><span class="line">    String lockPath = internals.attemptLock(time, unit, getLockNodeBytes());</span><br><span class="line">    if ( lockPath != null )</span><br><span class="line">        &#123;</span><br><span class="line">        //获得锁之后，记录当前的线程获得锁的信息，在重入时只需在LockData中增加次数统计即可</span><br><span class="line">        LockData newLockData = new LockData(currentThread, lockPath);</span><br><span class="line">        threadData.put(currentThread, newLockData);</span><br><span class="line">        return true;</span><br><span class="line">        &#125;</span><br><span class="line">    //在阻塞返回时仍然获取不到锁，这里上下文的处理隐含的意思为zookeeper通信异常</span><br><span class="line">    return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取锁的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">String attemptLock(long time, TimeUnit unit, byte[] lockNodeBytes) throws Exception &#123;</span><br><span class="line">        long startMillis = System.currentTimeMillis();</span><br><span class="line">        Long millisToWait = unit != null ? unit.toMillis(time) : null;</span><br><span class="line">        byte[] localLockNodeBytes = this.revocable.get() != null ? new byte[0] : lockNodeBytes;</span><br><span class="line">        int retryCount = 0;</span><br><span class="line">        String ourPath = null;</span><br><span class="line">        boolean hasTheLock = false;</span><br><span class="line">        boolean isDone = false;</span><br><span class="line">        //循环</span><br><span class="line">        while(!isDone) &#123;</span><br><span class="line">            isDone = true;</span><br><span class="line">            try &#123;</span><br><span class="line">                //创建有序的临时节点</span><br><span class="line">                ourPath = this.driver.createsTheLock(this.client, this.path, localLockNodeBytes);</span><br><span class="line">                //判断此此节点是否能获取到锁</span><br><span class="line">                hasTheLock = this.internalLockLoop(startMillis, millisToWait, ourPath);</span><br><span class="line">            &#125; catch (NoNodeException var14) &#123;</span><br><span class="line">                if (!this.client.getZookeeperClient().getRetryPolicy().allowRetry(retryCount++, System.currentTimeMillis() - startMillis, RetryLoop.getDefaultRetrySleeper())) &#123;</span><br><span class="line">                    throw var14;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                isDone = false;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return hasTheLock ? ourPath : null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面代码中主要有两步操作：</p>
+<p>driver.createsTheLock：创建临时且有序的子节点，里面实现比较简单不做展开，主要关注几种节点的模式：1）PERSISTENT（永久）；2）PERSISTENT_SEQUENTIAL（永久且有序）；3）EPHEMERAL（临时）；4）EPHEMERAL_SEQUENTIAL（临时且有序）。<br>internalLockLoop：阻塞等待直到获得锁。<br>看下internalLockLoop是怎么判断锁以及阻塞等待的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">private boolean internalLockLoop(long startMillis, Long millisToWait, String ourPath) throws Exception &#123;</span><br><span class="line">        boolean haveTheLock = false;</span><br><span class="line">        boolean doDelete = false;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            if (this.revocable.get() != null) &#123;</span><br><span class="line">                //创建监听器</span><br><span class="line">                ((BackgroundPathable)this.client.getData().usingWatcher(this.revocableWatcher)).forPath(ourPath);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            while(this.client.getState() == CuratorFrameworkState.STARTED &amp;&amp; !haveTheLock) &#123;</span><br><span class="line">                List&lt;String&gt; children = this.getSortedChildren();</span><br><span class="line">                String sequenceNodeName = ourPath.substring(this.basePath.length() + 1);</span><br><span class="line">                //判断当前节点是否为最小节点</span><br><span class="line">                PredicateResults predicateResults = this.driver.getsTheLock(this.client, children, sequenceNodeName, this.maxLeases);</span><br><span class="line">                //如果为最小节点即为获得锁  返回true</span><br><span class="line">                if (predicateResults.getsTheLock()) &#123;</span><br><span class="line">                    haveTheLock = true;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line"></span><br><span class="line">                    String previousSequencePath = this.basePath + &quot;/&quot; + predicateResults.getPathToWatch();</span><br><span class="line">                    synchronized(this) &#123;</span><br><span class="line">                        try &#123;</span><br><span class="line">                            //获取前一个节点 并添加监听器监听前一个节点的删除消息并进行wait()，当前一个节点删除（即所被释放）时，回调notifyAll（）方法唤醒此线程，使其继续循环判断是否获取锁</span><br><span class="line">                            ((BackgroundPathable)this.client.getData().usingWatcher(this.watcher)).forPath(previousSequencePath);</span><br><span class="line">                            if (millisToWait == null) &#123;</span><br><span class="line">                                this.wait();</span><br><span class="line">                            &#125; else &#123;</span><br><span class="line">                                millisToWait = millisToWait - (System.currentTimeMillis() - startMillis);</span><br><span class="line">                                startMillis = System.currentTimeMillis();</span><br><span class="line">                                if (millisToWait &gt; 0L) &#123;</span><br><span class="line">                                    this.wait(millisToWait);</span><br><span class="line">                                &#125; else &#123;</span><br><span class="line">                                    doDelete = true; //等待时间到达，删除对应的子节点</span><br><span class="line">                                    break;</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        //上面使用getData来设置监听器时，如果前一个子节点已经被删除那么会抛出NoNodeException，只需要自旋一次即可，无需额外处理</span><br><span class="line">                        &#125; catch (NoNodeException var19) &#123;</span><br><span class="line">                            ;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception var21) &#123;</span><br><span class="line">            ThreadUtils.checkInterrupted(var21);</span><br><span class="line">            doDelete = true;</span><br><span class="line">            throw var21;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if (doDelete) &#123;</span><br><span class="line">                this.deleteOurPath(ourPath);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return haveTheLock;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/18/zookeeperlock/" data-id="cjy8or7j1000oiwnw746mhhhm" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/05/10/spring-afterread/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          spring_afterread
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/04/16/java序列化/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">java序列化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量-重量级锁、读写锁、各种锁及其Java实现/" style="font-size: 10px;">悲观锁、乐观锁、可重入锁、自旋锁、偏向锁、轻量/重量级锁、读写锁、各种锁及其Java实现</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/07/18/integer/">integer</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/07/16/lock/">lock</a>
+          </li>
+        
+          <li>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+          </li>
+        
+          <li>
+            <a href="/2019/05/30/b-tree/">b+tree</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
