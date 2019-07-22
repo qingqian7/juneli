@@ -62,6 +62,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-mysql" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/27/mysql/" class="article-date">
+  <time datetime="2019-02-27T13:30:38.000Z" itemprop="datePublished">2019-02-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/02/27/mysql/">mysql</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="数据库的同步和异步执行模式"><a href="#数据库的同步和异步执行模式" class="headerlink" title="数据库的同步和异步执行模式"></a>数据库的同步和异步执行模式</h3><h4 id="同步和异步执行模式"><a href="#同步和异步执行模式" class="headerlink" title="同步和异步执行模式"></a>同步和异步执行模式</h4><p>　　ODBC2．0访问数据库时，有同步执行模式与异步执行模式之分。<br>　　所谓同步执行模式，是指语句在同步执行模式下，将始终保持对程序流的控制，直至程序结束。例如查询操作，客户机上的应用程序在向服务器发出查询操作的指令后，将一直等待服务器将查询结果返回客户机端后，才继续进行下一步操作。</p>
+<p>　所谓异步执行模式，是指语句在异步执行模式下，各语句执行结束的顺序与语句执行开始的顺序并不一定相同。例如查询操作，客户机上的应用程序在向服务器发出了查询操作的指令后，将立刻执行查询语句的下一条语句，而不需要等到服务器将查询结果返回客户机端后，才继续进行下一步操作。 </p>
+<p>　　在一些应用程序开发工具中，在其提供使用数据控制项和数据库对象变量进行编程的同时，并没有很好地考虑到同步执行模式与异步执行模式的重要区别。为了使程序运行速度更快，其语句执行的缺省模式为异步模式。对于一般程序员来说，如果他对同步执行模式与异步执行模式不了解的话，他往往会在对服务器发出一个操作语句（查询或读取一条记录等操作）后，立刻引用服务器返回的执行结果，或者对该结果进行下一步操作；在异步执行模式下，客户机上的后续语句是在该操作语句发出后接着执行的，但由于各种原因，服务器不一定能执行完该操作语句，并在后续语句执行前将结果返回客户机。因此，后续语句在引用前一操作语句的执行结果时，往往会因为该执行结果并不存在而引用了错误的值，造成系统错误或死锁。</p>
+<h5 id="解决上面所提到的问题，可以采取以下两种方案："><a href="#解决上面所提到的问题，可以采取以下两种方案：" class="headerlink" title="解决上面所提到的问题，可以采取以下两种方案："></a>解决上面所提到的问题，可以采取以下两种方案：</h5><p>　　①利用ODBC2．0API，将语句执行状态设置为同步执行模式。ODBC2．0API中，函数SQLSetStmtOption（）的功能是设置同步或异步执行模式。我们可以采用以下语句，将语句执行状态设置为同步执行模式：<br>iRetCodeΚSQLSetStmtOption（hStmt，SQL－ASYNC－ENABLE，0）<br>其中，hStmt是一有效的语句句柄，常数SQL－ASYNC－ENABLE是所要设置的选项，参数0表示该选项（即异步执行模式）关闭。如果iRetCode返回SQL－SUCCESS，则表示语句执行状态已被设置为同步执行模式。<br>　　②利用ODBC2．0API，将语句执行状态设置为异步执行模式，然后在程序中不断查询一个操作语句是否已经执行完毕。<br>　　这些函数第一次调用后，将返回值SQL－STILL－EXECUTING，这时应用程序将继续执行后续语句。过了一段时间后，应该再次调用原函数，而且要注意：实参数应传入与第一次调用时相同的语句句柄，其他参数也应一样（但会被忽略）。如果函数返回值为SQL－SUCCESS，则表明该语句已经执行完毕；如果函数返回SQL－STILL－EXECUTING，则表明该语句仍在执行中。 </p>
+<p>　　我们可以用一个简单的例子说明如下： </p>
+<p>iRetCodeΚSQLSetStmtOption（hStmt，SQL－ASYNC－ENABLE，1）<br>′置语句执行模式为异步执行模式<br>iRetCodeΚSQLExecDirect（hStmt，″SELECT＊FROMemployees″，23）<br>．．．．．．′执行其他操作<br>iRetCodeΚSQLExecDirect（hStmt，″SELECT＊FROMemployees″，23）<br>′判断SQLExecDirect（）是否已执行完毕<br>If（iRetCodeΚSQL－STILL－EXECUTING）Then<br>．．．．．．′该语句未执行完，继续执行其他操作<br>Else<br>If（iRetCodeΚSQL－SUCCESS）Then<br>．．．．．．′该语句已执行完，可对语句操作结果进行处理<br>EndIf<br>EndIf<br>　　同步执行模式可以简化程序编制的复杂性，对ODBC2．0API不十分熟悉的程序员，可以不用过多地了解比较复杂的ODBC2．0API，而只需使用数据控制项和数据库对象变量来编写应用程序，使开发效率大大提高，但程序运行速度比不上异步执行模式的速度。 </p>
+<p>　　异步执行模式虽然在编程序时十分复杂，但在这种模式下可以进行多任务并行执行，使执行效率大大提高。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/27/mysql/" data-id="cjydsg9fl000az0nwhyg1t3ws" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-webflux" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/02/27/webflux/" class="article-date">
@@ -94,7 +137,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/02/27/webflux/" data-id="cjy8or7ji000siwnwxwtw9jzn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/02/27/webflux/" data-id="cjydsg9hb000tz0nwjgipm42h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -135,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/02/27/reactor/" data-id="cjy8or7jt000wiwnwtfuq6n35" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/02/27/reactor/" data-id="cjydsg9hp000wz0nwz94s2hiy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -177,7 +220,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/02/24/shiro/" data-id="cjy8or7jh000riwnwo02fd2wa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/02/24/shiro/" data-id="cjydsg9h5000rz0nwnp1vtlo0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -218,7 +261,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/18/elasticsearh-grammer/" data-id="cjy8or7he0002iwnwcyedoawq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/18/elasticsearh-grammer/" data-id="cjydsg9f40003z0nw21xbei62" class="article-share-link">Share</a>
       
       
     </footer>
@@ -259,7 +302,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/17/es-hadoop-mongoDB/" data-id="cjy8or7hg0003iwnwyivpwubn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/17/es-hadoop-mongoDB/" data-id="cjydsg9f20002z0nwg6v0u9hm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -301,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/17/springboot-elasticsearch/" data-id="cjy8or7iy000kiwnwb8hgdx6t" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/17/springboot-elasticsearch/" data-id="cjydsg9go000kz0nwxgw10w1n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -346,7 +389,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/17/elasticsearch/" data-id="cjy8or7ij000eiwnwmucumdfe" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/17/elasticsearch/" data-id="cjydsg9g8000ez0nw6dgg5uyd" class="article-share-link">Share</a>
       
       
     </footer>
@@ -384,7 +427,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/10/gateway/" data-id="cjy8or7hl0006iwnw8gbu9s0k" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/10/gateway/" data-id="cjydsg9f80005z0nwvqbv5f8i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -426,58 +469,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/10/rabbitmq/" data-id="cjy8or7iw000jiwnwri9lc0dx" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-jvm-gc" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/10/jvm-gc/" class="article-date">
-  <time datetime="2018-12-10T06:50:50.000Z" itemprop="datePublished">2018-12-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/10/jvm-gc/">jvm_gc</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这篇文章会具体介绍Java堆空间和参数MaxPermSize的含义。这篇文章涉及下列主题，并采用Hotspot JVM：</p>
-<ul>
-<li>垃圾回收器（garbage collector，gc）</li>
-<li>jvm</li>
-<li>jvm命令行选项</li>
-</ul>
-<p>####垃圾回收器<br>垃圾回收器负责：</p>
-<ul>
-<li>分配内存</li>
-<li>保证所有正在被引用的对象还在内存中</li>
-<li>回收执行代码已经不再需要的对象所占用的内存空间
-        
-          <p class="article-more-link">
-            <a href="/2018/12/10/jvm-gc/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/12/10/jvm-gc/" data-id="cjy8or7ho0008iwnwxbll1xhk" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/12/10/rabbitmq/" data-id="cjydsg9gl000iz0nw0gea9eoz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -537,11 +529,11 @@
       <ul>
         
           <li>
-            <a href="/2019/07/18/integer/">integer</a>
+            <a href="/2019/07/22/跳表/">跳表</a>
           </li>
         
           <li>
-            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
+            <a href="/2019/07/18/integer/">integer</a>
           </li>
         
           <li>
@@ -549,11 +541,11 @@
           </li>
         
           <li>
-            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
+            <a href="/2019/07/16/lock_20190718_210149/">lock</a>
           </li>
         
           <li>
-            <a href="/2019/05/30/b-tree/">b+tree</a>
+            <a href="/2019/06/22/redis-cluster/">redis-cluster</a>
           </li>
         
       </ul>
